@@ -1,13 +1,17 @@
 ;BS-X BIOS Disassembly
 ;Bank $80
 
-_reset:                                 ;808F7D
+;========================================================
+;            RESET VECTOR AND INITIALIZATION
+;========================================================
+
+_reset:                                                     ;($808F7D)
     sei                 ;Set Interrupt Flag
     clc                 ;Clear Carry Flag
     xce                 ;Switch to Native Mode
     jml init
 
-init:                                   ;808F84
+init:                                                       ;($808F84)
     sep #$20            ;8-bit A
     rep #$10            ;16-bit X/Y
     phk
@@ -28,7 +32,7 @@ init:                                   ;808F84
     cmp #$5347
     bne init_ram
     tcd
-init_ram:
+ init_ram:
     lda #$0000
     sta $7E0000
     sta $7F0000
@@ -63,18 +67,18 @@ init_ram:
     sta $0135
     jsl CODE_808200     ;TODO
 
-    lda $9FFFF1         ;Set Soundbank 0 address
+    lda $9FFFF1         ;Set Music Bank 0 address
     sta $21             ;for APU upload
     lda $9FFFF0
     sta $20
     jsl apu_upload_curr_thread_bios     ;($80995A)
-                        ;Upload First Soundbank
-init_waitvblank:
+                                        ;Upload Music Bank 0
+ init_waitvblank:
     lda $4212
     lsr a               ;Wait for V-Blank Flag
     bcc init_waitvblank
 
-init_waitaftervblank:
+ init_waitaftervblank:
     lda $4212
     lsr a               ;Wait after V-Blank Flag
     bcs init_waitaftervblank
@@ -86,21 +90,21 @@ init_waitaftervblank:
     jsl CODE_80C8E4     ;If pressed, initialize the SRAM
     lda #$0384
     ldy #$0001
-    jsl apu_message     ;($105C1C) Make a sound effect
+    jsl apu_message                     ;($105C1C) Make a sound effect
 
-init_sramcheck:
-    jsl CODE_80C8F7     ;Check SRAM Integrity
-    jsl boot_hook       ;Call Boot Hook
+ init_sramcheck:
+    jsl CODE_80C8F7             ;Check SRAM Integrity
+    jsl boot_hook                       ;($105974)
 
-    sep #$20            ;8-bit A
-    rep #$10            ;16-bit X/Y
-    stz $143F           ;Init Satellaview Detection Flag
-    jsl detect_receiver ;Satellaview Expansion Base Detection Code
-                        ;Returns: Z flag - If set, Satellaview is not found
+    sep #$20                    ;8-bit A
+    rep #$10                    ;16-bit X/Y
+    stz $143F                   ;Init Satellaview Detection Flag
+    jsl detect_receiver         ;Satellaview Expansion Base Detection Code
+                                ;Returns: Z flag - If set, Satellaview is not found
     beq init_afterdetect
-    inc $143F           ;Set Satellaview Detection Flag to 1
+    inc $143F                   ;Set Satellaview Detection Flag to 1
 
-init_afterdetect:
+ init_afterdetect:
     jsl mute_radio_audio                ;($105B58)
     jsl init_port_2199_registers        ;($1059A4)
     jsl map_flash_for_rw_access         ;($105A6C)
@@ -111,7 +115,7 @@ init_afterdetect:
     jsl CODE_808C0F     ;Setup VRAM?
     jsl CODE_80A709
     jsl CODE_808358
-    jsl CODE_105B40     ;($105B40)
+    jsl CODE_105B40                     ;($105B40)
 
     lda #$0008
     sta $014C
@@ -128,16 +132,17 @@ init_afterdetect:
     sta $0637
     lda #$0094
     sta $0639
-    bra 
+    bra init_aftercreatethread
 
-init_SGcheck:
+ init_SGcheck:
     jsl CODE_80937F                 ;Set Next NMI to nothing
-    jsl reset_interpreter           ;$81C210
-    jsl set_interpreter_enable_flag ;$81C29A
+    jsl reset_interpreter               ;($81C210)
+    jsl set_interpreter_enable_flag     ;($81C29A)
     lda #$0094
     sta $BE
     lda #$BD38
-    jsl create_interpreter_thread   ;$81C2B0
+    jsl create_interpreter_thread       ;($81C2B0) Skip the Title Screen?
+ init_aftercreatethread:
     stz $0665
     jsl CODE_809225                 ;destroy machine code threads?
     lda #$913A
@@ -146,17 +151,21 @@ init_SGcheck:
     sta $0641                       ;Set $063F to $80913A
     jsl CODE_80839D                 ;Enable NMI
     cli
-init_nmi_setup:
-    jsr CODE_80936A                 ;Set Next NMI to $80913A?
+ init_nmi_setup:
+    jsr CODE_80936A                 ;Set $0633 to $80913A
     phk
     pea $90D2
-    jml [$0633]
+    jml [$0633]                     ;Jump to CODE_80913A
     jmp init_nmi_setup
     rtl
 
-_nmi:                                   ;($8092AF)
+;========================================================
+;            NMI VECTOR
+;========================================================
+
+_nmi:                                                       ;($8092AF)
     jml nmi_handler
-nmi_handler:                            ;($8092B3)
+nmi_handler:                                                ;($8092B3)
     rep #$30                    ;16-bit A/X/Y
     pha
     phx
@@ -168,17 +177,17 @@ nmi_handler:                            ;($8092B3)
     lda #$0000
     tcd                         ;Set Direct Page to $0000
     lda $4210                   ;Acknowledge NMI IRQ
-    jsl nmi_hook                ;($105978)
+    jsl nmi_hook                        ;($105978)
     lda $0D,s
     and #$00FF
     cmp #$0004
-nmi_loopforever:
+ nmi_loopforever:
     beq nmi_loopforever
 
     lda $0643                   ;Check if NMI Handler was already active
     beq nmi_continue
     jmp nmi_force_end
-nmi_continue:
+ nmi_continue:
     inc $0643                   ;Set NMI Handler Flag
     jsl CODE_808944             ;Update OAM
     jsl CODE_808CDC             ;Work off DMA Pipeline
@@ -188,21 +197,20 @@ nmi_continue:
     jsl CODE_80AC5E             ;VRAM DMA
     jsl CODE_808200             ;Update PPU Registers
     jsl CODE_809390             ;USELESS
-    jsl nmi_do_led_blinking     ;($105B4C)
+    jsl nmi_do_led_blinking             ;($105B4C)
     jsl CODE_80896A             ;?
     jsl CODE_808E99             ;?
-    jsl apu_nmi_handling        ;($105C20)
-    jsl download_nmi_handling   ;($105B44)
+    jsl apu_nmi_handling                ;($105C20)
+    jsl download_nmi_handling           ;($105B44)
     jsl CODE_808363             ;?
     jsl CODE_808AEB             ;?
     jsr CODE_809355             ;Setup address to return
     phk
     pea $9321
     jml [$062F]
-
-nmi_force_end:
+ nmi_force_end:
     rep #$30
-    jsl download_nmi_handling   ;($105B44)
+    jsl download_nmi_handling           ;($105B44)
     jsl CODE_808F49             ;Frame Counter?
     pld
     plb
@@ -211,7 +219,11 @@ nmi_force_end:
     pla
     rti
 
-_header:                                 ;80FFB0
+;========================================================
+;            HEADER
+;========================================================
+
+_header:                                                    ;($80FFB0)
     ;Extended Header
     db "01"                             ;Maker Code: Nintendo (01)
     db "ZBSJ"                           ;Game Code: "ZBSJ"
