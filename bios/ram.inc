@@ -131,7 +131,7 @@ constant content_header($7E99A6)        ;Satellaview Content Header
 ;            Satellite Download
 ;========================================================
 
-constant sat_prefix($7E9A20)            ;Prefix Download [14 bytes]
+constant sat_prefix($7E9A20)            ;Prefix Download [20 bytes]
 constant sat_data($7E9A34)              ;Data Download [440 bytes]
 constant sat_channelmap($7E9BEC)        ;Channel Map [1485 bytes]
 constant sat_message($7EA1B9)           ;Message [100 bytes]
