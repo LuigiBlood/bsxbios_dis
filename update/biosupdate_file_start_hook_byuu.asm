@@ -1,18 +1,18 @@
-;BS-X BIOS
-;file_start_hook update from bsx18.srm (BS-X SRAMS Dumps 6-26-01)
-;Disassembled by LuigiBlood
+//BS-X BIOS
+//file_start_hook update from bsx18.srm (BS-X SRAMS Dumps 6-26-01)
+//Disassembled by LuigiBlood
 
-;$115276
+//$115276
 file_start_hook:
-LDA #$1152
-STA $AD
-LDA #$5281
-STA $AC    ;$AC = $115281 (change PC of BS-X script interpreter)
-RTL
+    lda.w #$1152
+    sta $AD
+    lda.w #$5281
+    sta $AC         //$AC = $115281 (change PC of BS-X Token Interpreter)
+    rtl
 
-;$115281
+//$115281
 file_start_hook_script:
-{SoundApuMessage00h_nnh ({var_imm}+$81)} ;Stop music
+{SoundApuMessage00h_nnh ({var_imm}+$81)}            //Stop music
 {MasterBrightnessFadeOut $0020, $0020}
 {KillAllOtherThreads}
 {ControlSubThread {ctlsub_kill}}
@@ -31,16 +31,16 @@ file_start_hook_script:
 {CallSelectWindowBorder $0000, $00FF}
 {DrawMessageBoxAllAtOnce ({var_imm}+0), ({var_imm}+0), ({var_imm}+0), ({var_imm}+0), file_start_hook_text}
 {ClearForcedBlankAndSleepOnce}
-{SoundApuUpload $00, $9FFFF3} ;Upload Music Bank
+{SoundApuUpload $00, $9FFFF3}                       //Upload Music Bank
 {Sleep $0001}
-{SoundApuMessage00h_nnh ({var_imm}+$12)} ;Play Music $12
+{SoundApuMessage00h_nnh ({var_imm}+$12)}            //Play Music $12
 {Sleep $0002}
 {ClearForcedBlankAndFadeIn $0020, $0020}
 {Sleep $0020}
-{SoundApuMessage01h_nnnh ({var_imm}+1), $03, $03} ;Play SFX
+{SoundApuMessage01h_nnnh ({var_imm}+1), $03, $03}   //Play SFX
 {Sleep $0040}
-{Goto $9580CB} ;???
+{Goto $9580CB}                                      //???
 
 file_start_hook_text:
-;$11531E
+//$11531E
 "       ＪＯ２３－ＢＳ－ＴＤＭ１\n            Ｓｔ．ＧＩＧＡ\n\n これからお送りします情報を無断で他に\n 複製することを禁止します。"
