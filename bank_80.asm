@@ -381,7 +381,7 @@ CODE_80840C:        8D 00 01      STA $0100                 ;
 CODE_80840F:        28            PLP                       ;
 CODE_808410:        6B            RTL                       ;
 
-CODE_808411:        08            PHP                       ;
+CODE_808411:        08            PHP                       ;shadow_register_setup
 CODE_808412:        E2 10         SEP #$10                  ;
 CODE_808414:        C2 20         REP #$20                  ;
 CODE_808416:        A3 03         LDA $03,s                 ;

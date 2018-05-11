@@ -3,4 +3,5 @@
 
 arch snes.cpu
 
+include "ram.inc"
 include "bank80.asm"

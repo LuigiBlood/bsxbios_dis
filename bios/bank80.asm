@@ -236,39 +236,38 @@ disable_force_blank:                                        //($808404)
     plp
     rtl
 
-CODE_808411:
+shadow_register_setup:                                      //($808411)
     php
     sep #$10
     rep #$20
-    lda $03,s
+    lda $03,s       //Use Return Address as argument
     sta $0021
     lda $02,s
     sta $0020
     clc
-    adc.w #$0003
+    adc.w #$0003    //Set Return Address properly (+3)
     sta $02,s
-    ldy #$01
+    ldy.b #$01
     lda [$20],y
     sta $0023
     iny
     lda [$20],y
     sta $0024
     sep #$20
-    ldy #$00
- -; lda [$23],y
+    ldy.b #$00
+ -; lda [$23],y     //Read Register Shadow Address
     tax
-    cmp.b #$FF
+    cmp.b #$FF      //If $FF, stop
     beq +
     iny
-    lda [$23],y
+    lda [$23],y     //Read value to write to shadow register
     sta $0100,x
     iny
     bra -
  +; plp
     rtl
 
-DATA_008449:
-    dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
+DATA_808449:
     dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
     dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
     dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
@@ -300,136 +299,196 @@ DATA_008449:
     dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
     dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
     dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
+    dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
 
-DATA_008649:
-    db $00, $1E; dw $0300
-    db $00, $1E; dw $0C00
-    db $00, $1E; dw $3000
-    db $00, $1E; dw $C000
+DATA_808649:
     db $00, $1E; dw $0003
     db $00, $1E; dw $000C
     db $00, $1E; dw $0030
     db $00, $1E; dw $00C0
-    db $02, $1E; dw $0300
-    db $02, $1E; dw $0C00
-    db $02, $1E; dw $3000
-    db $02, $1E; dw $C000
+    db $00, $1E; dw $0300
+    db $00, $1E; dw $0C00
+    db $00, $1E; dw $3000
+    db $00, $1E; dw $C000
     db $02, $1E; dw $0003
     db $02, $1E; dw $000C
     db $02, $1E; dw $0030
     db $02, $1E; dw $00C0
-    db $04, $1E; dw $0300
-    db $04, $1E; dw $0C00
-    db $04, $1E; dw $3000
-    db $04, $1E; dw $C000
+    db $02, $1E; dw $0300
+    db $02, $1E; dw $0C00
+    db $02, $1E; dw $3000
+    db $02, $1E; dw $C000
     db $04, $1E; dw $0003
     db $04, $1E; dw $000C
     db $04, $1E; dw $0030
     db $04, $1E; dw $00C0
-    db $06, $1E; dw $0300
-    db $06, $1E; dw $0C00
-    db $06, $1E; dw $3000
-    db $06, $1E; dw $C000
+    db $04, $1E; dw $0300
+    db $04, $1E; dw $0C00
+    db $04, $1E; dw $3000
+    db $04, $1E; dw $C000
     db $06, $1E; dw $0003
     db $06, $1E; dw $000C
     db $06, $1E; dw $0030
     db $06, $1E; dw $00C0
-    db $08, $1E; dw $0300
-    db $08, $1E; dw $0C00
-    db $08, $1E; dw $3000
-    db $08, $1E; dw $C000
+    db $06, $1E; dw $0300
+    db $06, $1E; dw $0C00
+    db $06, $1E; dw $3000
+    db $06, $1E; dw $C000
     db $08, $1E; dw $0003
     db $08, $1E; dw $000C
     db $08, $1E; dw $0030
     db $08, $1E; dw $00C0
-    db $0A, $1E; dw $0300
-    db $0A, $1E; dw $0C00
-    db $0A, $1E; dw $3000
-    db $0A, $1E; dw $C000
+    db $08, $1E; dw $0300
+    db $08, $1E; dw $0C00
+    db $08, $1E; dw $3000
+    db $08, $1E; dw $C000
     db $0A, $1E; dw $0003
     db $0A, $1E; dw $000C
     db $0A, $1E; dw $0030
     db $0A, $1E; dw $00C0
-    db $0C, $1E; dw $0300
-    db $0C, $1E; dw $0C00
-    db $0C, $1E; dw $3000
-    db $0C, $1E; dw $C000
+    db $0A, $1E; dw $0300
+    db $0A, $1E; dw $0C00
+    db $0A, $1E; dw $3000
+    db $0A, $1E; dw $C000
     db $0C, $1E; dw $0003
     db $0C, $1E; dw $000C
     db $0C, $1E; dw $0030
     db $0C, $1E; dw $00C0
-    db $0E, $1E; dw $0300
-    db $0E, $1E; dw $0C00
-    db $0E, $1E; dw $3000
-    db $0E, $1E; dw $C000
+    db $0C, $1E; dw $0300
+    db $0C, $1E; dw $0C00
+    db $0C, $1E; dw $3000
+    db $0C, $1E; dw $C000
     db $0E, $1E; dw $0003
     db $0E, $1E; dw $000C
     db $0E, $1E; dw $0030
     db $0E, $1E; dw $00C0
-    db $10, $1E; dw $0300
-    db $10, $1E; dw $0C00
-    db $10, $1E; dw $3000
-    db $10, $1E; dw $C000
+    db $0E, $1E; dw $0300
+    db $0E, $1E; dw $0C00
+    db $0E, $1E; dw $3000
+    db $0E, $1E; dw $C000
     db $10, $1E; dw $0003
     db $10, $1E; dw $000C
     db $10, $1E; dw $0030
     db $10, $1E; dw $00C0
-    db $12, $1E; dw $0300
-    db $12, $1E; dw $0C00
-    db $12, $1E; dw $3000
-    db $12, $1E; dw $C000
+    db $10, $1E; dw $0300
+    db $10, $1E; dw $0C00
+    db $10, $1E; dw $3000
+    db $10, $1E; dw $C000
     db $12, $1E; dw $0003
     db $12, $1E; dw $000C
     db $12, $1E; dw $0030
     db $12, $1E; dw $00C0
-    db $14, $1E; dw $0300
-    db $14, $1E; dw $0C00
-    db $14, $1E; dw $3000
-    db $14, $1E; dw $C000
+    db $12, $1E; dw $0300
+    db $12, $1E; dw $0C00
+    db $12, $1E; dw $3000
+    db $12, $1E; dw $C000
     db $14, $1E; dw $0003
     db $14, $1E; dw $000C
     db $14, $1E; dw $0030
     db $14, $1E; dw $00C0
-    db $16, $1E; dw $0300
-    db $16, $1E; dw $0C00
-    db $16, $1E; dw $3000
-    db $16, $1E; dw $C000
+    db $14, $1E; dw $0300
+    db $14, $1E; dw $0C00
+    db $14, $1E; dw $3000
+    db $14, $1E; dw $C000
     db $16, $1E; dw $0003
     db $16, $1E; dw $000C
     db $16, $1E; dw $0030
     db $16, $1E; dw $00C0
-    db $18, $1E; dw $0300
-    db $18, $1E; dw $0C00
-    db $18, $1E; dw $3000
-    db $18, $1E; dw $C000
+    db $16, $1E; dw $0300
+    db $16, $1E; dw $0C00
+    db $16, $1E; dw $3000
+    db $16, $1E; dw $C000
     db $18, $1E; dw $0003
     db $18, $1E; dw $000C
     db $18, $1E; dw $0030
     db $18, $1E; dw $00C0
-    db $1A, $1E; dw $0300
-    db $1A, $1E; dw $0C00
-    db $1A, $1E; dw $3000
-    db $1A, $1E; dw $C000
+    db $18, $1E; dw $0300
+    db $18, $1E; dw $0C00
+    db $18, $1E; dw $3000
+    db $18, $1E; dw $C000
     db $1A, $1E; dw $0003
     db $1A, $1E; dw $000C
     db $1A, $1E; dw $0030
     db $1A, $1E; dw $00C0
-    db $1C, $1E; dw $0300
-    db $1C, $1E; dw $0C00
-    db $1C, $1E; dw $3000
-    db $1C, $1E; dw $C000
+    db $1A, $1E; dw $0300
+    db $1A, $1E; dw $0C00
+    db $1A, $1E; dw $3000
+    db $1A, $1E; dw $C000
     db $1C, $1E; dw $0003
     db $1C, $1E; dw $000C
     db $1C, $1E; dw $0030
     db $1C, $1E; dw $00C0
-    db $1E, $1E; dw $0300
-    db $1E, $1E; dw $0C00
-    db $1E, $1E; dw $3000
-    db $1E, $1E; dw $C000
+    db $1C, $1E; dw $0300
+    db $1C, $1E; dw $0C00
+    db $1C, $1E; dw $3000
+    db $1C, $1E; dw $C000
     db $1E, $1E; dw $0003
     db $1E, $1E; dw $000C
     db $1E, $1E; dw $0030
     db $1E, $1E; dw $00C0
+    db $1E, $1E; dw $0300
+    db $1E, $1E; dw $0C00
+    db $1E, $1E; dw $3000
+    db $1E, $1E; dw $C000
+
+CODE_808849:
+    lda [$20]
+    beq CODE_8088C5
+    sta $04
+    ldy.w #$0002
+    ldx $1E20
+    clc
+ -; lda [$20],y
+    sta $0C
+    iny
+    iny
+    adc $00
+    sta $1C00,x
+    bit.w #$0100
+    beq +
+    lda.l DATA_808649,x
+    sta $06
+    lda ($06)
+    ora.l DATA_808449,x
+    sta ($06)
+ +; lda [$20],y
+    and.w #$00FF
+    bit.w #$0080
+    beq +
+    ora.w #$FF00
+ +; clc
+    adc $02
+    cmp.w #$00F0
+    bcc +
+    cmp.w #$FFF0
+    bcs +
+    lda.w #$00F0
+ +; sep #$20
+    sta $1C01,x
+    iny
+    rep #$21
+    lda $0C
+    bpl +
+    lda.l DATA_808649,x
+    sta $06
+    lda ($06)
+    ora.l (DATA_808449+2),x
+    sta ($06)
+ +; lda [$20],y
+    iny
+    iny
+    and $0A
+    adc $08
+    sta $1C02,x
+    txa
+    adc.w #$0004
+    adc.w #$01FF
+    tax
+    dec $04
+    bne -
+    stx $1E20
+CODE_8088C5:
+    rtl
 
 //========================================================
 //            RESET VECTOR AND INITIALIZATION
@@ -471,13 +530,13 @@ init:                                                       //($808F84)
     ldx.w #$0001
     txy
     iny
-    mvn $7E,$7E         //Clear Bank $7E (WRAM)
+    mvn $7E=$7E         //Clear Bank $7E (WRAM)
 
     lda.w #$FFFD
     ldx.w #$0001
     txy
     iny
-    mvn $7F,$7F         //Clear Bank $7F (WRAM)
+    mvn $7F=$7F         //Clear Bank $7F (WRAM)
 
     phk
     plb                 //Set Data Bank to $80
@@ -486,17 +545,16 @@ init:                                                       //($808F84)
     lda.w #$0000
     tcd                 //Set Direct Page to $0000
     lda.w #$1EFF
-    tcs                 //Set Stack Pointer to $1EFF
-    jsl CODE_808411     //TODO
-
-    dl $8090D7
+    tas                 //Set Stack Pointer to $1EFF
+    jsl shadow_register_setup     //Set up PPU register shadows
+    dl $8090D7                  //Argument for shadow_register_setup
 
     lda.w #$0080
-    sta $0100
+    sta.w inidisp_shadow
     sta $021B
     lda.w #$0001
-    sta $0135
-    jsl update_ppu      //Initialize PPU Registers
+    sta.w nmitimen_shadow
+    jsl update_ppu      //Update PPU Registers
 
     lda $9FFFF1         //Set Music Bank 0 address
     sta $21             //for APU upload
@@ -506,12 +564,12 @@ init:                                                       //($808F84)
                                         //Upload Music Bank 0
  init_waitvblank:
     lda $4212
-    lsr a               //Wait for V-Blank Flag
+    lsr                 //Wait for V-Blank Flag
     bcc init_waitvblank
 
  init_waitaftervblank:
     lda $4212
-    lsr a               //Wait after V-Blank Flag
+    lsr                 //Wait after V-Blank Flag
     bcs init_waitaftervblank
 
     lda $421A           //Read Joypad 2
@@ -586,7 +644,7 @@ init:                                                       //($808F84)
     jsr CODE_80936A                 //Set $0633 to $80913A
     phk
     pea $90D2
-    jml [$0633]                     //Jump to CODE_80913A
+    jmp [$0633]                     //Jump to CODE_80913A
     jmp init_jump_setup
     rtl
 
@@ -638,7 +696,7 @@ nmi_handler:                                                //($8092B3)
     jsr CODE_809355             //Setup address to return
     phk
     pea $9321
-    jml [$062F]
+    jmp [$062F]
  nmi_force_end:
     rep #$30
     jsl download_nmi_handling           //($105B44)
