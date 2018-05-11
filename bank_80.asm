@@ -160,7 +160,7 @@ DATA_0081F6:        FF FF FF FF
 DATA_0081FA:        FF FF FF FF   
 DATA_0081FE:        FF FF 
 
-CODE_808200:        08            PHP                       ;
+CODE_808200:        08            PHP                       ;update_ppu
 CODE_808201:        E2 20         SEP #$20                  ;
 CODE_808203:        AD 00 01      LDA $0100                 ;
 CODE_808206:        8D 00 21      STA $2100                 ;
@@ -263,7 +263,7 @@ CODE_808323:        8D 0C 42      STA $420C                 ;
 CODE_808326:        28            PLP                       ;
 CODE_808327:        6B            RTL                       ;
 
-CODE_808328:        08            PHP                       ;
+CODE_808328:        08            PHP                       ;update_cgram
 CODE_808329:        E2 10         SEP #$10                  ;
 CODE_80832B:        C2 20         REP #$20                  ;
 CODE_80832D:        AD 1C 02      LDA $021C                 ;
@@ -320,7 +320,7 @@ CODE_808398:        8D 24 02      STA $0224                 ;
 CODE_80839B:        28            PLP                       ;
 CODE_80839C:        6B            RTL                       ;
 
-CODE_80839D:        08            PHP                       ;
+CODE_80839D:        08            PHP                       ;enable_nmi
 CODE_80839E:        E2 20         SEP #$20                  ;
 CODE_8083A0:        AD 35 01      LDA $0135                 ;
 CODE_8083A3:        09 80         ORA #$80                  ;
@@ -329,7 +329,7 @@ CODE_8083A8:        8D 35 01      STA $0135                 ;
 CODE_8083AB:        28            PLP                       ;
 CODE_8083AC:        6B            RTL                       ;
 
-CODE_8083AD:        08            PHP                       ;
+CODE_8083AD:        08            PHP                       ;disable_nmi
 CODE_8083AE:        E2 20         SEP #$20                  ;
 CODE_8083B0:        AD 35 01      LDA $0135                 ;
 CODE_8083B3:        29 7F         AND #$7F                  ;
@@ -338,7 +338,7 @@ CODE_8083B8:        8D 35 01      STA $0135                 ;
 CODE_8083BB:        28            PLP                       ;
 CODE_8083BC:        6B            RTL                       ;
 
-CODE_8083BD:        08            PHP                       ;
+CODE_8083BD:        08            PHP                       ;upload_zero_to_vram
 CODE_8083BE:        E2 20         SEP #$20                  ;
 CODE_8083C0:        A9 80         LDA #$80                  ;
 CODE_8083C2:        8D 15 21      STA $2115                 ;
@@ -365,7 +365,7 @@ CODE_8083F4:        6B            RTL                       ;
 
 DATA_0083F5:        00 00 
 
-CODE_8083F7:        08            PHP                       ;
+CODE_8083F7:        08            PHP                       ;enable_force_blank
 CODE_8083F8:        E2 20         SEP #$20                  ;
 CODE_8083FA:        AD 00 01      LDA $0100                 ;
 CODE_8083FD:        09 80         ORA #$80                  ;
@@ -373,7 +373,7 @@ CODE_8083FF:        8D 00 01      STA $0100                 ;
 CODE_808402:        28            PLP                       ;
 CODE_808403:        6B            RTL                       ;
 
-CODE_808404:        08            PHP                       ;
+CODE_808404:        08            PHP                       ;disable_force_blank
 CODE_808405:        E2 20         SEP #$20                  ;
 CODE_808407:        AD 00 01      LDA $0100                 ;
 CODE_80840A:        29 7F         AND #$7F                  ;

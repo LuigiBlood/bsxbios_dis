@@ -2,6 +2,436 @@
 //Bank $80
 
 //========================================================
+//            UPDATE REGISTERS
+//========================================================
+
+update_ppu:                                                 //($808200)
+    php
+    sep #$20
+    lda.w inidisp_shadow
+    sta $2100
+    sta $021B
+    lda.w obsel_shadow
+    sta $2101
+    lda.w bgmode_shadow
+    sta $2105
+    lda.w mosaic_shadow
+    sta $2106
+    lda.w bg1sc_shadow
+    sta $2107
+    lda.w bg2sc_shadow
+    sta $2108
+    lda.w bg3sc_shadow
+    sta $2109
+    lda.w bg4sc_shadow
+    sta $210A
+    lda.w bg12nba_shadow
+    sta $210B
+    lda.w bg34nba_shadow
+    sta $210C
+    lda.w m7sel_shadow
+    sta $211A
+    lda.w w12sel_shadow
+    sta $2123
+    lda.w w34sel_shadow
+    sta $2124
+    lda.w wobjsel_shadow
+    sta $2125
+    lda.w wh0_shadow
+    sta $2126
+    lda.w wh1_shadow
+    sta $2127
+    lda.w wh2_shadow
+    sta $2128
+    lda.w wh3_shadow
+    sta $2129
+    lda.w wbglog_shadow
+    sta $212A
+    lda.w wobjlog_shadow
+    sta $212B
+    lda.w tm_shadow
+    sta $212C
+    lda.w ts_shadow
+    sta $212E
+    lda.w tmw_shadow
+    sta $212D
+    lda.w tsw_shadow
+    sta $212F
+    lda.w cgwsel_shadow
+    sta $2130
+    lda.w cgadsub_shadow
+    sta $2131
+    lda.w coldata_r_shadow
+    ora.b #$20 
+    sta $2132
+    lda.w coldata_g_shadow
+    ora.b #$40 
+    sta $2132
+    lda.w coldata_b_shadow
+    ora.b #$80 
+    sta $2132
+    lda.w setini_shadow
+    sta $2133
+    lda.w bg1hofs_shadow
+    sta $210D
+    lda.w bg1hofs_h_shadow
+    sta $210D
+    lda.w bg1vofs_shadow
+    sta $210E
+    lda.w bg1vofs_h_shadow
+    sta $210E
+    lda.w bg2hofs_shadow
+    sta $210F
+    lda.w bg2hofs_h_shadow
+    sta $210F
+    lda.w bg2vofs_shadow
+    sta $2110
+    lda.w bg2vofs_h_shadow
+    sta $2110
+    lda.w bg3hofs_shadow
+    sta $2111
+    lda.w bg3hofs_h_shadow
+    sta $2111
+    lda.w bg3vofs_shadow
+    sta $2112
+    lda.w bg3vofs_h_shadow
+    sta $2112
+    lda.w bg4hofs_shadow
+    sta $2113
+    lda.w bg4hofs_h_shadow
+    sta $2113
+    lda.w bg4vofs_shadow
+    sta $2114
+    lda.w bg4vofs_h_shadow
+    sta $2114
+    lda.w hdmaen_shadow
+    sta $420C
+    plp
+    rtl
+
+update_cgram:                                               //($808328)
+    php
+    sep #$10
+    rep #$20
+    lda $021C
+    beq +               //Don't do it if $021C is 0
+    lda.w #$2200
+    sta $4310
+    lda.w #$2000
+    sta $4312
+    ldx.b #$7E
+    stx $4314
+    lda.w #$0200
+    sta $4315
+    ldx.b #$00
+    stx $2121
+    ldx.b #$02
+    stx $420B
+    stz $021C
+ +; plp
+    rtl
+
+CODE_808358:
+    php
+    rep #$20
+    lda.w #$0061
+    sta $0224
+    plp
+    rtl
+
+CODE_808363:
+    php
+    sep #$20
+    lda $0224       //Multiply something
+    sta $4202
+    lda.b #$05
+    sta $4203
+    nop
+    rep #$20
+    lda $4216
+    pha
+    sep #$20
+    lda $0225
+    sta $4202
+    lda.b #$05
+    sta $4203
+    xba
+    nop
+    lda $4216
+    sec
+    adc $02,s
+    sta $02,s
+    rep #$20
+    pla
+    adc.w #$0011
+    adc $0226
+    sta $0224
+    plp
+    rtl
+
+enable_nmi:                                                 //($80839D)
+    php
+    sep #$20
+    lda.w nmitimen_shadow
+    ora.b #$80
+    sta $4200
+    sta.w nmitimen_shadow
+    plp
+    rtl
+
+disable_nmi:                                                //($8083AD)
+    php
+    sep #$20
+    lda.w nmitimen_shadow
+    and.b #$7F
+    sta $4200
+    sta.w nmitimen_shadow
+    plp
+    rtl
+
+upload_zero_to_vram:                                        //($8083BD)
+    php
+    sep #$20
+    lda.b #$80
+    sta $2115       //Set Up VRAM
+    stz $2116
+    stz $2117
+    lda.b #$09
+    sta $4300
+    lda.b #$18
+    sta $4301
+    lda.b #$F5
+    sta $4302
+    lda.b #$83
+    sta $4303
+    lda.b #$80
+    sta $4304
+    lda.b #$00
+    sta $4305
+    lda.b #$00      //Set up DMA (Mode 1, transfer 2 bytes)
+    sta $4306       //$8083F5 (ROM) -> $2118 (VRAM)
+    lda.b #$01      //$0000 bytes
+    sta $420B
+    plp
+    rtl
+
+upload_zero_to_vram_data:                                   //($8083F5)
+    dw $0000
+
+enable_force_blank:                                         //($8083F7)
+    php
+    sep #$20
+    lda.w inidisp_shadow
+    ora.b #$80
+    sta.w inidisp_shadow
+    plp
+    rtl
+
+disable_force_blank:                                        //($808404)
+    php
+    sep #$20
+    lda.w inidisp_shadow
+    and.b #$7F
+    sta.w inidisp_shadow
+    plp
+    rtl
+
+CODE_808411:
+    php
+    sep #$10
+    rep #$20
+    lda $03,s
+    sta $0021
+    lda $02,s
+    sta $0020
+    clc
+    adc.w #$0003
+    sta $02,s
+    ldy #$01
+    lda [$20],y
+    sta $0023
+    iny
+    lda [$20],y
+    sta $0024
+    sep #$20
+    ldy #$00
+ -; lda [$23],y
+    tax
+    cmp.b #$FF
+    beq +
+    iny
+    lda [$23],y
+    sta $0100,x
+    iny
+    bra -
+ +; plp
+    rtl
+
+DATA_008449:
+    dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
+    dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
+    dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
+    dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
+    dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
+    dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
+    dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
+    dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
+    dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
+    dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
+    dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
+    dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
+    dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
+    dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
+    dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
+    dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
+    dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
+    dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
+    dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
+    dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
+    dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
+    dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
+    dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
+    dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
+    dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
+    dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
+    dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
+    dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
+    dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
+    dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
+    dw $0100, $0200, $0400, $0800, $1000, $2000, $4000, $8000
+    dw $0001, $0002, $0004, $0008, $0010, $0020, $0040, $0080
+
+DATA_008649:
+    db $00, $1E; dw $0300
+    db $00, $1E; dw $0C00
+    db $00, $1E; dw $3000
+    db $00, $1E; dw $C000
+    db $00, $1E; dw $0003
+    db $00, $1E; dw $000C
+    db $00, $1E; dw $0030
+    db $00, $1E; dw $00C0
+    db $02, $1E; dw $0300
+    db $02, $1E; dw $0C00
+    db $02, $1E; dw $3000
+    db $02, $1E; dw $C000
+    db $02, $1E; dw $0003
+    db $02, $1E; dw $000C
+    db $02, $1E; dw $0030
+    db $02, $1E; dw $00C0
+    db $04, $1E; dw $0300
+    db $04, $1E; dw $0C00
+    db $04, $1E; dw $3000
+    db $04, $1E; dw $C000
+    db $04, $1E; dw $0003
+    db $04, $1E; dw $000C
+    db $04, $1E; dw $0030
+    db $04, $1E; dw $00C0
+    db $06, $1E; dw $0300
+    db $06, $1E; dw $0C00
+    db $06, $1E; dw $3000
+    db $06, $1E; dw $C000
+    db $06, $1E; dw $0003
+    db $06, $1E; dw $000C
+    db $06, $1E; dw $0030
+    db $06, $1E; dw $00C0
+    db $08, $1E; dw $0300
+    db $08, $1E; dw $0C00
+    db $08, $1E; dw $3000
+    db $08, $1E; dw $C000
+    db $08, $1E; dw $0003
+    db $08, $1E; dw $000C
+    db $08, $1E; dw $0030
+    db $08, $1E; dw $00C0
+    db $0A, $1E; dw $0300
+    db $0A, $1E; dw $0C00
+    db $0A, $1E; dw $3000
+    db $0A, $1E; dw $C000
+    db $0A, $1E; dw $0003
+    db $0A, $1E; dw $000C
+    db $0A, $1E; dw $0030
+    db $0A, $1E; dw $00C0
+    db $0C, $1E; dw $0300
+    db $0C, $1E; dw $0C00
+    db $0C, $1E; dw $3000
+    db $0C, $1E; dw $C000
+    db $0C, $1E; dw $0003
+    db $0C, $1E; dw $000C
+    db $0C, $1E; dw $0030
+    db $0C, $1E; dw $00C0
+    db $0E, $1E; dw $0300
+    db $0E, $1E; dw $0C00
+    db $0E, $1E; dw $3000
+    db $0E, $1E; dw $C000
+    db $0E, $1E; dw $0003
+    db $0E, $1E; dw $000C
+    db $0E, $1E; dw $0030
+    db $0E, $1E; dw $00C0
+    db $10, $1E; dw $0300
+    db $10, $1E; dw $0C00
+    db $10, $1E; dw $3000
+    db $10, $1E; dw $C000
+    db $10, $1E; dw $0003
+    db $10, $1E; dw $000C
+    db $10, $1E; dw $0030
+    db $10, $1E; dw $00C0
+    db $12, $1E; dw $0300
+    db $12, $1E; dw $0C00
+    db $12, $1E; dw $3000
+    db $12, $1E; dw $C000
+    db $12, $1E; dw $0003
+    db $12, $1E; dw $000C
+    db $12, $1E; dw $0030
+    db $12, $1E; dw $00C0
+    db $14, $1E; dw $0300
+    db $14, $1E; dw $0C00
+    db $14, $1E; dw $3000
+    db $14, $1E; dw $C000
+    db $14, $1E; dw $0003
+    db $14, $1E; dw $000C
+    db $14, $1E; dw $0030
+    db $14, $1E; dw $00C0
+    db $16, $1E; dw $0300
+    db $16, $1E; dw $0C00
+    db $16, $1E; dw $3000
+    db $16, $1E; dw $C000
+    db $16, $1E; dw $0003
+    db $16, $1E; dw $000C
+    db $16, $1E; dw $0030
+    db $16, $1E; dw $00C0
+    db $18, $1E; dw $0300
+    db $18, $1E; dw $0C00
+    db $18, $1E; dw $3000
+    db $18, $1E; dw $C000
+    db $18, $1E; dw $0003
+    db $18, $1E; dw $000C
+    db $18, $1E; dw $0030
+    db $18, $1E; dw $00C0
+    db $1A, $1E; dw $0300
+    db $1A, $1E; dw $0C00
+    db $1A, $1E; dw $3000
+    db $1A, $1E; dw $C000
+    db $1A, $1E; dw $0003
+    db $1A, $1E; dw $000C
+    db $1A, $1E; dw $0030
+    db $1A, $1E; dw $00C0
+    db $1C, $1E; dw $0300
+    db $1C, $1E; dw $0C00
+    db $1C, $1E; dw $3000
+    db $1C, $1E; dw $C000
+    db $1C, $1E; dw $0003
+    db $1C, $1E; dw $000C
+    db $1C, $1E; dw $0030
+    db $1C, $1E; dw $00C0
+    db $1E, $1E; dw $0300
+    db $1E, $1E; dw $0C00
+    db $1E, $1E; dw $3000
+    db $1E, $1E; dw $C000
+    db $1E, $1E; dw $0003
+    db $1E, $1E; dw $000C
+    db $1E, $1E; dw $0030
+    db $1E, $1E; dw $00C0
+
+//========================================================
 //            RESET VECTOR AND INITIALIZATION
 //========================================================
 
@@ -37,17 +467,17 @@ init:                                                       //($808F84)
     sta $7E0000
     sta $7F0000
 
-    lda.w #$FFFD          //Size: $FFFE
-    ldx.w #$0001          //Source: $0001
+    lda.w #$FFFD
+    ldx.w #$0001
     txy
-    iny                 //Destination: $0002
-    mvn $7E,$7E         //Initialize First Half of Work RAM to $00
+    iny
+    mvn $7E,$7E         //Clear Bank $7E (WRAM)
 
-    lda.w #$FFFD          //Size: $FFFE
-    ldx.w #$0001          //Source: $0001
+    lda.w #$FFFD
+    ldx.w #$0001
     txy
-    iny                 //Destination: $0002
-    mvn $7F,$7F         //Initialize Second Half of Work ROM to $00
+    iny
+    mvn $7F,$7F         //Clear Bank $7F (WRAM)
 
     phk
     plb                 //Set Data Bank to $80
@@ -59,13 +489,14 @@ init:                                                       //($808F84)
     tcs                 //Set Stack Pointer to $1EFF
     jsl CODE_808411     //TODO
 
-    cmp [$8090],Y
+    dl $8090D7
+
     lda.w #$0080
     sta $0100
     sta $021B
     lda.w #$0001
     sta $0135
-    jsl CODE_808200     //TODO
+    jsl update_ppu      //Initialize PPU Registers
 
     lda $9FFFF1         //Set Music Bank 0 address
     sta $21             //for APU upload
@@ -149,14 +580,14 @@ init:                                                       //($808F84)
     sta $063F
     lda.w #$0080
     sta $0641                       //Set $063F to $80913A
-    jsl CODE_80839D                 //Enable NMI
+    jsl enable_nmi                  //Enable NMI
     cli
- init_nmi_setup:
+ init_jump_setup:
     jsr CODE_80936A                 //Set $0633 to $80913A
     phk
     pea $90D2
     jml [$0633]                     //Jump to CODE_80913A
-    jmp init_nmi_setup
+    jmp init_jump_setup
     rtl
 
 //========================================================
@@ -193,9 +624,9 @@ nmi_handler:                                                //($8092B3)
     jsl CODE_808CDC             //Work off DMA Pipeline
     jsl CODE_809C4E             //?
     jsl CODE_83AFC8             //?
-    jsl CODE_808328             //Update CGRAM
+    jsl update_cgram            //Update CGRAM
     jsl CODE_80AC5E             //VRAM DMA
-    jsl CODE_808200             //Update PPU Registers
+    jsl update_ppu              //Update PPU Registers
     jsl CODE_809390             //USELESS
     jsl nmi_do_led_blinking             //($105B4C)
     jsl CODE_80896A             //?
