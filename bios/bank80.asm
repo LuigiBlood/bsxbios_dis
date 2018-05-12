@@ -490,6 +490,651 @@ CODE_808849:
 CODE_8088C5:
     rtl
 
+CODE_8088C6:
+    lda $0000,y
+    bne +
+    rtl
+ +; sta $0004
+    iny
+    iny
+    ldx $1E20
+    clc
+ -; lda $0000,y
+    clc
+    adc $0000
+    sta $1C00,x
+    bit.w #$0100
+    beq +
+    lda.l DATA_808649,x
+    sta $0006
+    lda ($06)
+    ora.l DATA_808449,x
+    sta ($06)
+ +; sep #$20
+    clc
+    lda $0002,y
+    bmi +
+    adc $0002
+    bcs CODE_808909
+    bcc CODE_808907
+ +; adc $0002
+    bcc CODE_808909
+CODE_808907:
+    lda.b #$F0
+CODE_808909:
+    sta $1C01,x
+    rep #$21
+    lda $0000,y
+    bpl +
+    lda.l DATA_808649,x
+    sta $0006
+    lda ($06)
+    ora.l (DATA_808449+2),x
+    sta ($06)
+ +; lda $0003,y
+    adc $0008
+    ora $000A
+    sta $1C02,x
+    txa
+    adc.w #$0004
+    and.w #$01FF
+    tax
+    tya
+    adc.w #$0005
+    tay
+    dec $0004
+    bne -
+    stx $1E20
+    rtl
+
+upload_oam:                                                 //($808944)
+    php
+    sep #$10
+    rep #$20
+    lda.w #$0400
+    sta $4300
+    lda.w #$1C00
+    sta $4302
+    ldx.b #$00
+    stx $4304
+    lda.w #$0220
+    sta $4305
+    stz $2102       //DMA Setup:
+    ldx.b #$01      //$001C00 (RAM) -> $2104 (OAM)
+    stx $420B       //$0220 bytes
+    plp
+    rtl
+
+read_joypad:                                                //($80896A)
+    php
+    sep #$20
+ -; lda $4212               //Wait until Auto-Joypad read is done
+    and.b #$01
+    bne -
+    rep #$20
+    lda $4218               //Joypad 1
+    sta.w joy1_input
+    eor.w joy1_input_last
+    and.w joy1_input
+    sta.w joy1_pushed
+    sta $0158
+    lda.w joy1_input
+    beq +
+    cmp.w joy1_input_last
+    bne +
+    dec $0162
+    bne ++
+    lda.w joy1_input
+    sta $0158
+    lda $014E
+    sta $0162
+    bra ++
+ +; lda $014C
+    sta $0162
+ +; lda.w joy1_input
+    sta.w joy1_input_last
+    lda $421A               //Joypad 2
+    sta.w joy2_input
+    eor joy2_input_last
+    and.w joy2_input
+    sta.w joy2_pushed
+    sta $015A
+    lda.w joy2_input
+    beq +
+    cmp joy2_input_last
+    bne +
+    dec $016A
+    bne ++
+    lda.w joy2_input
+    sta $015A
+    lda $014E
+    sta $016A
+    bra ++
+ +; lda $014C
+    sta $016A
+ +; lda.w joy2_input
+    sta joy2_input_last
+    plp
+    rtl
+
+upload_oam2:                                                //($8089EE)
+    php             //Why this a second time?
+    sep #$10
+    rep #$20
+    lda.w #$0400
+    sta $4300
+    lda.w #$1C00
+    sta $4302
+    ldx.b #$00
+    stx $4304
+    lda.w #$0220
+    sta $4305
+    stz $2102       //DMA Setup:
+    ldx.b #$01      //$001C00 (RAM) -> $2104 (OAM)
+    stx $420B       //$0220 bytes
+    plp
+    rtl
+
+CODE_808A14:
+    php
+    phd
+    sep #$30
+    lda $1E21
+    and.b #$03
+    asl
+    tax
+    jsr.w (DATA_008A2A,x)
+    rep #$30
+    stz $1E20
+    pld
+    plp
+    rtl
+
+DATA_008A2A:
+    dw CODE_808A32
+    dw CODE_808A51
+    dw clear_oam_low_buffer_return
+    dw clear_oam_low_buffer_return
+
+CODE_808A32:
+    rep #$20
+    ldx.w #$0BF0
+    lda.w #$1D00
+    tcd
+    jsr clear_oam_low_buffer
+    pld
+    lda $1E20
+    lsr
+    clc
+    adc.w #clear_oam_low_buffer
+    sta $003C
+    lda.w #$1C00
+    tcd
+    jmp ($003C)
+
+CODE_808A51:
+    rep #$20
+    ldx.w #$ADF0
+    jsr CODE_80291E
+    sbc $184A00,x
+    adc.w #clear_oam_low_buffer
+    sta $003C
+    lda.w #$1D00
+    tcd
+    jmp ($003C)
+
+clear_oam_low_buffer:                                       //($808A6A)
+    stx $01
+    stx $05
+    stx $09
+    stx $0D
+    stx $11
+    stx $15
+    stx $19
+    stx $1D
+    stx $21
+    stx $25
+    stx $29
+    stx $2D
+    stx $31
+    stx $35
+    stx $39
+    stx $3D
+    stx $41
+    stx $45
+    stx $49
+    stx $4D
+    stx $51
+    stx $55
+    stx $59
+    stx $5D
+    stx $61
+    stx $65
+    stx $69
+    stx $6D
+    stx $71
+    stx $75
+    stx $79
+    stx $7D
+    stx $81
+    stx $85
+    stx $89
+    stx $8D
+    stx $91
+    stx $95
+    stx $99
+    stx $9D
+    stx $A1
+    stx $A5
+    stx $A9
+    stx $AD
+    stx $B1
+    stx $B5
+    stx $B9
+    stx $BD
+    stx $C1
+    stx $C5
+    stx $C9
+    stx $CD
+    stx $D1
+    stx $D5
+    stx $D9
+    stx $DD
+    stx $E1
+    stx $E5
+    stx $E9
+    stx $ED
+    stx $F1
+    stx $F5
+    stx $F9
+    stx $FD
+clear_oam_low_buffer_return:
+    rts
+
+clear_oam_high_buffer:                                      //($808AEB)
+    stz $1E00
+    stz $1E02
+    stz $1E04
+    stz $1E06
+    stz $1E08
+    stz $1E0A
+    stz $1E0C
+    stz $1E0E
+    stz $1E10
+    stz $1E12
+    stz $1E14
+    stz $1E16
+    stz $1E18
+    stz $1E1A
+    stz $1E1C
+    stz $1E1E
+    rtl
+
+CODE_808B1C:
+    php
+    phb
+    sep #$20
+    lda $05,s
+    pha
+    plb
+    rep #$30
+    lda $03,s
+    tax
+    lda $0001,x
+    and.w #$00FF
+    sta $0038
+    sta $003A
+    inx
+    ldy.w #$0000
+ -; lsr $0038
+    bcc +
+    lda $0001,x
+    sta $4300,y
+    lda $0003,x
+    sta $4302,y
+    lda $0005,x
+    sta $4304,y
+    lda $0006,x
+    sta $4305,y
+    txa
+    clc
+    adc.w #$0007
+    tax
+ +; tya
+    clc
+    adc.w #$0010
+    tay
+    cpy.w #$0080
+    bne -
+    txa
+    sta $03,s
+    sep #$20
+    lda $003A
+    sta $420B
+    plb
+    plp
+    rtl
+
+CODE_808B75:
+    phx
+    phy
+    pha
+    php
+    sep #$10
+    rep #$20
+    ldx $0014
+    stx $4202
+    ldx $0016
+    stx $4203
+    nop
+    nop
+    nop
+    lda $4216
+    sta $0018
+    ldx $0015
+    stx $4202
+    ldx $0017
+    stx $4203
+    nop
+    nop
+    nop
+    ldx $4216
+    stx $001A
+    ldy $4217
+    ldx $0015
+    stx $4202
+    ldx $0016
+    stx $4203
+    nop
+    nop
+    lda $0019
+    clc
+    adc $4216
+    sta $0019
+    bcc +
+    iny
+ +; ldx $0014
+    stx $4202
+    ldx $0017
+    stx $4203
+    nop
+    nop
+    lda $0019
+    clc
+    adc $4216
+    sta $0019
+    bcc +
+    iny
+ +; sty $001B
+    plp
+    pla
+    ply
+    plx
+    rtl
+
+CODE_808BE8:
+    php
+    rep #$30
+    stz $14
+    lda $1C
+    bne +
+    stz $1A
+    bra ++
+ +; ldx.w #$0011
+    clc
+ -; rol $1A
+    dex
+    beq +
+    rol $14
+    lda $14
+    beq -
+    sec
+    sbc $1C
+    bcc -
+    sta $14
+    bra -
+ +; plp
+    rtl
+
+CODE_808C0F:
+    phb         //Something to do with VRAM DMA pipeline
+    php
+    phk
+    plb
+    sep #$30
+    lda.b #$80
+    sta $020C
+    lda.b #$10
+    sta $01FC
+    ldx.b #$0F
+ -; stz $016C,x
+    dex
+    bpl -
+    plp
+    plb
+    rtl
+
+CODE_808C2A: //Invoke_dma_via_ax_ptr
+    php
+    rep #$30
+    phx
+    phy
+    tay
+    lda $0643
+    pha
+    lda.w #$0001
+    sta $0643
+    tya
+    xba
+    sta $3F
+    stx $3E
+    sep #$30
+    ldy #$00
+    ldx #$0F
+ -; lda $016C,x
+    beq CODE_808C5E
+    dex
+    bpl -
+    bra CODE_808C53
+CODE_808C50:
+    stz $016C,x
+CODE_808C53:
+    nop
+CODE_808C54:
+    rep #$30
+    pla
+    sta $0643
+    ply
+    plx
+    plp
+    rtl
+CODE_808C5E:
+    lda [$3E],y
+    iny
+    sta $016C,x
+ -; beq -
+    dec
+    beq CODE_808C9E
+    lda [$3E],y
+    iny
+    sta $01AC,x
+    lda [$3E],y
+    iny
+    sta $01BC,x
+    lda [$3E],y
+    iny
+    sta $01CC,x
+    lda [$3E],y
+    iny
+    sta $01DC,x
+    lda [$3E],y
+    iny
+    sta $01EC,x
+    lda [$3E],y
+    iny
+    sta $017C,x
+    lda [$3E],y
+    iny
+    sta $018C,x
+    lda [$3E],y
+    cmp.b #$80
+    bcs CODE_808C50
+    sta $019C,x
+    bra CODE_808CC1
+CODE_808C9E:
+    lda [$3E],y
+    iny
+    sta $01AC,x
+    lda [$3E],y
+    iny
+    sta $01BC,x
+    lda [$3E],y
+    iny
+    sta $01CC,x
+    lda [$3E],y
+    iny
+    sta $01DC,x
+    lda [$3E],y
+    iny
+    sta $01EC,x
+    lda [$3E],y
+    sta $017C,x
+    lda.b #$80
+    sta $01FC,x
+    txa
+    ldx $01FC
+    sta $01FC,x
+    sta $01FC
+    lda $021B
+    bpl +
+    jsl CODE_808CDC
+ +; brl CODE_808C54
+
+CODE_808CDC: //Invoke_dma_via_ax_ptr (dma pipeline work subroutine)
+    phb
+    php
+    phk
+    plb
+    sep #$30
+    ldx #$10
+CODE_808CE4:
+    lda $01FC,x
+    bmi CODE_808CFB
+    tax
+    lda $016C,x
+    dec
+    beq CODE_808D4C
+    dec
+    beq CODE_808D08
+    dec
+    bne CODE_808CF9
+    brl CODE_808D83
+CODE_808CF9:
+    bra CODE_808CF9
+CODE_808CFB:
+    lda #$80
+    sta $020C
+    lda #$10
+    sta $01FC
+    plp
+    plb
+    rtl
+CODE_808D08:
+    lda $01AC,x
+    sta $4312
+    lda $01BC,x
+    sta $4313
+    lda $01CC,x
+    sta $4314
+    lda $01DC,x
+    sta $4315
+    lda $01EC,x
+    sta $4316
+    lda $017C,x
+    sta $2115
+    lda $018C,x
+    sta $2116
+    lda $019C,x
+    sta $2117
+    lda #$01
+    sta $4310
+    lda #$18
+    sta $4311
+    lda.b #$02
+    sta $420B
+    stz $016C,x
+    bra CODE_808CE4
+CODE_808D4C:
+    lda $01AC,x
+    sta $4312
+    lda $01BC,x
+    sta $4313
+    lda $01CC,x
+    sta $4314
+    lda $01DC,x
+    sta $4315
+    lda $01EC,x
+    sta $4316
+    lda $017C,x
+    sta $2121
+    stz $4310
+    lda #$22
+    sta $4311
+    lda #$02
+    sta $420B
+    stz $016C,x
+    brl CODE_808CE4
+CODE_808D83:
+    lda $01AC,x
+    sta $4312
+    lda $01BC,x
+    sta $4313
+    lda $01CC,x
+    sta $4314
+    lda $01DC,x
+    sta $4315
+    lda $01EC,x
+    sta $4316
+    lda $017C,x
+    sta $2115
+    lda $018C,x
+    sta $2116
+    lda $019C,x
+    sta $2117
+    lda #$81
+    sta $4310
+    lda #$39
+    sta $4311
+    lda $2139
+    lda $213A
+    lda #$02
+    sta $420B
+    stz $016C,x
+    brl CODE_808CE4
+
+CODE_808DCE:    //Mouse related
+    phx
+    jsr CODE_808DD9     //mouseX_input_l
+    inx
+    inx
+    jsr CODE_808DD9     //mouseX_input_h
+    plx
+    rts
+
+CODE_808DD9:    //Turn mouse input into real negative number
+    lda.w mouse1_input_l,x
+    bpl +
+    and.b #$7F
+    eor.b #$FF
+    inc
+    sta.w mouse1_input_l,x
+    bra ++
+ +; and.b #$7F
+ +; sta.w mouse1_input_l,x
+    rts
+
+CODE_808DEE:    //TODO
+
 //========================================================
 //            RESET VECTOR AND INITIALIZATION
 //========================================================
@@ -678,7 +1323,7 @@ nmi_handler:                                                //($8092B3)
     jmp nmi_force_end
  nmi_continue:
     inc $0643                   //Set NMI Handler Flag
-    jsl CODE_808944             //Update OAM
+    jsl upload_oam             //Update OAM
     jsl CODE_808CDC             //Work off DMA Pipeline
     jsl CODE_809C4E             //?
     jsl CODE_83AFC8             //?
@@ -687,12 +1332,12 @@ nmi_handler:                                                //($8092B3)
     jsl update_ppu              //Update PPU Registers
     jsl CODE_809390             //USELESS
     jsl nmi_do_led_blinking             //($105B4C)
-    jsl CODE_80896A             //?
+    jsl read_joypad             //?
     jsl CODE_808E99             //?
     jsl apu_nmi_handling                //($105C20)
     jsl download_nmi_handling           //($105B44)
     jsl CODE_808363             //?
-    jsl CODE_808AEB             //?
+    jsl clear_oam_high_buffer             //?
     jsr CODE_809355             //Setup address to return
     phk
     pea $9321

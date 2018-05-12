@@ -1029,7 +1029,7 @@ CODE_80893E:        D0 95         BNE CODE_8088D5           ;
 CODE_808940:        8E 20 1E      STX $1E20                 ;
 CODE_808943:        6B            RTL                       ;
 
-CODE_808944:        08            PHP                       ;
+CODE_808944:        08            PHP                       ;upload_oam
 CODE_808945:        E2 10         SEP #$10                  ;
 CODE_808947:        C2 20         REP #$20                  ;
 CODE_808949:        A9 00 04      LDA #$0400                ;
@@ -1046,7 +1046,7 @@ CODE_808965:        8E 0B 42      STX $420B                 ;
 CODE_808968:        28            PLP                       ;
 CODE_808969:        6B            RTL                       ;
 
-CODE_80896A:        08            PHP                       ;
+CODE_80896A:        08            PHP                       ;read_joypad
 CODE_80896B:        E2 20         SEP #$20                  ;
 CODE_80896D:        AD 12 42      LDA $4212                 ;
 CODE_808970:        29 01         AND #$01                  ;
@@ -1069,7 +1069,6 @@ CODE_80899A:        8D 58 01      STA $0158                 ;
 CODE_80899D:        AD 4E 01      LDA $014E                 ;
 CODE_8089A0:        8D 62 01      STA $0162                 ;
 CODE_8089A3:        80 06         BRA CODE_8089AB           ;
-
 CODE_8089A5:        AD 4C 01      LDA $014C                 ;
 CODE_8089A8:        8D 62 01      STA $0162                 ;
 CODE_8089AB:        AD 50 01      LDA $0150                 ;
@@ -1091,7 +1090,6 @@ CODE_8089D5:        8D 5A 01      STA $015A                 ;
 CODE_8089D8:        AD 4E 01      LDA $014E                 ;
 CODE_8089DB:        8D 6A 01      STA $016A                 ;
 CODE_8089DE:        80 06         BRA CODE_8089E6           ;
-
 CODE_8089E0:        AD 4C 01      LDA $014C                 ;
 CODE_8089E3:        8D 6A 01      STA $016A                 ;
 CODE_8089E6:        AD 52 01      LDA $0152                 ;
@@ -1099,7 +1097,7 @@ CODE_8089E9:        8D 64 01      STA $0164                 ;
 CODE_8089EC:        28            PLP                       ;
 CODE_8089ED:        6B            RTL                       ;
 
-CODE_8089EE:        08            PHP                       ;
+CODE_8089EE:        08            PHP                       ;upload_oam2
 CODE_8089EF:        E2 10         SEP #$10                  ;
 CODE_8089F1:        C2 20         REP #$20                  ;
 CODE_8089F3:        A9 00 04      LDA #$0400                ;
@@ -1162,7 +1160,7 @@ CODE_808A63:        A9 00 1D      LDA #$1D00                ;
 CODE_808A66:        5B            TCD                       ;
 CODE_808A67:        6C 3C 00      JMP ($003C)               ;
 
-CODE_808A6A:        86 01         STX $01                   ;
+CODE_808A6A:        86 01         STX $01                   ;clear_oam_low_buffer
 CODE_808A6C:        86 05         STX $05                   ;
 CODE_808A6E:        86 09         STX $09                   ;
 CODE_808A70:        86 0D         STX $0D                   ;
@@ -1226,9 +1224,9 @@ CODE_808AE2:        86 F1         STX $F1                   ;
 CODE_808AE4:        86 F5         STX $F5                   ;
 CODE_808AE6:        86 F9         STX $F9                   ;
 CODE_808AE8:        86 FD         STX $FD                   ;
-CODE_808AEA:        60            RTS                       ;
+CODE_808AEA:        60            RTS                       ;clear_oam_low_buffer_return
 
-CODE_808AEB:        9C 00 1E      STZ $1E00                 ;
+CODE_808AEB:        9C 00 1E      STZ $1E00                 ;clear_oam_high_buffer
 CODE_808AEE:        9C 02 1E      STZ $1E02                 ;
 CODE_808AF1:        9C 04 1E      STZ $1E04                 ;
 CODE_808AF4:        9C 06 1E      STZ $1E06                 ;
@@ -1353,7 +1351,6 @@ CODE_808BED:        A5 1C         LDA $1C                   ;
 CODE_808BEF:        D0 04         BNE CODE_808BF5           ;
 CODE_808BF1:        64 1A         STZ $1A                   ;
 CODE_808BF3:        80 18         BRA CODE_808C0D           ;
-
 CODE_808BF5:        A2 11 00      LDX #$0011                ;
 CODE_808BF8:        18            CLC                       ;
 CODE_808BF9:        26 1A         ROL $1A                   ;
@@ -1367,7 +1364,6 @@ CODE_808C05:        E5 1C         SBC $1C                   ;
 CODE_808C07:        90 F0         BCC CODE_808BF9           ;
 CODE_808C09:        85 14         STA $14                   ;
 CODE_808C0B:        80 EC         BRA CODE_808BF9           ;
-
 CODE_808C0D:        28            PLP                       ;
 CODE_808C0E:        6B            RTL                       ;
 
@@ -1596,7 +1592,6 @@ CODE_808DE0:        49 FF         EOR #$FF                  ;
 CODE_808DE2:        1A            INC A                     ;
 CODE_808DE3:        9D 11 02      STA $0211,x               ;
 CODE_808DE6:        80 02         BRA CODE_808DEA           ;
-
 CODE_808DE8:        29 7F         AND #$7F                  ;
 CODE_808DEA:        9D 11 02      STA $0211,x               ;
 CODE_808DED:        60            RTS                       ;
