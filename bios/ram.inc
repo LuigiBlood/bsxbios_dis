@@ -138,9 +138,29 @@ constant text_style($7E0725)            //Text Style
 constant error_number($7E13C5)          //Error Number
                                             //09 = Memory Pack Content Checksum Failed
 
+constant seconds_left($7E1433)
+constant ticks_left($7E1437)
+
 constant receiver_found($7E143F)        //Satellaview Found
 
-constant loaded_header($7E99A6)         //Satellaview Loaded Game Header
+//========================================================
+//            Video
+//========================================================
+
+constant oam_buffer($7E1C00)
+constant cgram_buffer($7E2000)
+
+//========================================================
+//            Map
+//========================================================
+
+constant tileset_gfx_table($7E2200)     //4 8x8 tiles to 1 16x16 table
+constant tileset_coll_table($7E2200)    //Collision data for tileset
+constant bg1_map($7E4600)               //BG1 Map Data (64x48)
+constant bg2_map($7E5E00)               //BG2 Map Data (64x48)
+
+constant loaded_header($7E99A6)         //Loaded Game Header
+constant mp_info($7E99D6)               //Memory Pack Info
 
 //========================================================
 //            Satellite Download

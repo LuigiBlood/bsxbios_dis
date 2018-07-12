@@ -1133,7 +1133,208 @@ CODE_808DD9:    //Turn mouse input into real negative number
  +; sta.w mouse1_input_l,x
     rts
 
-CODE_808DEE:    //TODO
+CODE_808DEE:    //Mouse? Unknown
+    txa
+    asl a
+    tay
+    lda $0158,y
+    asl a
+    asl a
+    rol $0215,x
+    lda $0154,y
+    asl a
+    asl a
+    rol $0215,x
+    lda $0150,y
+    asl a
+    asl a
+    rol $0215,x
+    ASL $0215,x
+    lda $0158,y
+    asl a
+    rol $0215,x
+    lda $0154,y
+    asl a
+    rol $0215,x
+    lda $0150,y
+    asl a
+    rol $0215,x
+    jsr CODE_808E25
+    rts
+
+CODE_808E25:    //Mouse? Unknown
+    lda $0219,x
+    bne +
+    lda $0215,x
+    and #$22
+    beq +++
+    sta $0217,x
+    lda #$40
+    sta $0219,x
+    bra +++
+ +; lda $0211,x
+    ora $0213,x
+    bne +
+    dec $0219,x
+    lda $0215,x
+    and #$22
+    and $0217,x
+    beq ++
+    asl a
+    asl a
+    ora $0215,x
+    sta $0215,x
+ +; stz $0219,x
+    stz $0217,x
+ +; rts
+
+CODE_808E5F:    //Mouse Read stuff?
+    ldx #$01
+ -; txa
+    asl a
+    tay
+    lda $4218,y
+    and #$0F
+    cmp #$01
+    beq +
+    stz $0217,x
+    stz $0219,x
+    bra ++
+ +; lda $020E
+    ora.w DATA_808E97,x
+    sta $020E
+    ldy #$10
+ -; lda $4016,x
+    lsr a
+    rol $0211,x
+    rol $0213,x
+    dey
+    bne -
+    jsr CODE_808DCE
+    jsr CODE_808DEE
+ +; dex
+    bpl --
+    rts
+
+DATA_808E97:
+    db $01, $02
+
+CODE_808E99:    //Mouse?
+    phb
+    php
+    phk
+    plb
+    sep #$30
+    stz $020E
+    stz $0215
+    stz $0211
+    stz $0213
+    stz $0216
+    stz $0212
+    stz $0214
+    lda $0135
+    lsr a
+    bcc +
+ -; lda $4212
+    lsr a
+    bcs -
+    jsr CODE_808E5F
+    jsr CODE_808F0A
+ +; plp
+    plb
+    rtl
+
+CODE_808EC9:    //Manual Joypad Read
+    lda #$06
+    sta $0041
+ -; lda #$01
+    sta $4016
+    lda $4016,x
+    stz $4016
+    lda #$01
+    sta $4016
+    lda #$00
+    sta $4016
+    sta $0044
+    ldy #$0A
+ -; lda $4016,x
+    dey
+    bne -
+    lda $4016,x
+    lsr a
+    rol $0044
+    lda $4016,x
+    lsr a
+    rol $0044
+    lda $0044
+    cmp $020F,x
+    beq +
+    dec $0041
+    bne --
+ +; rts
+
+CODE_808F0A:    //Read both joypad ports?
+    ldx #$01
+ -; lda $020E
+    and.w DATA_808F1B,x
+    beq +
+    jsr CODE_808EC9
+ +; dex
+    bpl -
+    rts
+
+DATA_808F1B:
+    db $01, $02
+
+CODE_808F1D:    //Enable Auto-Joypad Read
+    php
+    sep #$20
+    lda.w nmitimen_shadow
+    ora #$01
+    sta $4200
+    sta.w nmitimen_shadow
+    lda #$10
+    sta $014C
+    lda #$02
+    sta $014E
+    plp
+    rtl
+
+CODE_808F37:
+    php
+    sep #$20
+    lda #$01
+    sta $020D
+    lda #$02
+    sta $020F
+    sta $0210
+    plp
+    rtl
+
+CODE_808F49:    //Frame Counter
+    lda $0627
+    inc
+    cmp #$003C
+    bcs +
+    sta $0627
+    rtl
+ +; stz $0627
+    lda $0629
+    inc
+    cmp #$003C
+    bcs +
+    sta $0629
+    rtl
+ +; stz $0629
+    lda $062B
+    inc
+    cmp #$003C
+    bcs +
+    sta $062B
+    rtl
+ +; stz $062B
+    inc $062D
+    rtl
 
 //========================================================
 //            RESET VECTOR AND INITIALIZATION
@@ -1192,7 +1393,7 @@ init:                                                       //($808F84)
     lda.w #$1EFF
     tas                 //Set Stack Pointer to $1EFF
     jsl shadow_register_setup     //Set up PPU register shadows
-    dl $8090D7                  //Argument for shadow_register_setup
+    dl DATA_8090D7                //Argument for shadow_register_setup
 
     lda.w #$0080
     sta.w inidisp_shadow
@@ -1293,6 +1494,274 @@ init:                                                       //($808F84)
     jmp init_jump_setup
     rtl
 
+DATA_8090D7:
+    db $01, $00
+    db $02, $00
+    db $03, $00
+    db $04, $00
+    db $05, $00
+    db $06, $00
+    db $07, $00
+    db $08, $00
+    db $09, $00
+    db $0A, $00
+    db $0B, $00
+    db $0F, $00
+    db $10, $00
+    db $11, $00
+    db $12, $00
+    db $13, $00
+    db $14, $00
+    db $15, $00
+    db $16, $00
+    db $17, $00
+    db $18, $00
+    db $19, $00
+    db $1A, $00
+    db $1B, $00
+    db $1C, $00
+    db $1D, $00
+    db $1E, $00
+    db $0C, $00
+    db $0D, $00
+    db $0E, $00
+    db $1F, $00
+    db $20, $00
+    db $21, $00
+    db $22, $00
+    db $23, $00
+    db $24, $00
+    db $25, $00
+    db $26, $00
+    db $27, $00
+    db $28, $00
+    db $2A, $30
+    db $2B, $00
+    db $2C, $E0
+    db $30, $00
+    db $38, $00
+    db $39, $00
+    db $36, $00
+    db $37, $00
+    db $3A, $00
+    db $FF
+
+CODE_80913A:    //change machine code thread?
+    php
+    rep #$30
+    pha
+    phx
+    phy
+    phd
+    phb
+    phk
+    plb
+    tsx
+    txa
+    sep #$10
+    ldy $0645
+    ldx $0650,y
+    bpl +
+    sta $064D,y
+ +; tyx
+    sep #$30
+    lda #$FF
+    bra +
+ -; bit $0650,x
+    bvs +
+    bmi ++
+    bne +++
+ +; inx
+    inx
+    inx
+    inx
+    cpx #$10
+    bcc -
+    ldx #$00
+    bra -
+ +; stx $0645
+    txy
+    rep #$30
+    ldx $064D,y
+    txs
+    plb
+    pld
+    ply
+    plx
+    pla
+    plp
+    rtl
+ +; stx $0645
+    lda #$80
+    sta $0650,x
+    rep #$20
+    lda $064D,x
+    sta $064A
+    ldy $064F,x
+    sty $064C
+    rep #$30
+    lda $0645
+    and #$00FF
+    tax
+    lda.w DATA_8091A6,x
+    tcs
+    jml [$064A]
+
+DATA_8091A6:    //Stack Pointer related
+    dw $1E97, $0000, $1F0F, $0000, $1F87, $0000, $1FFF, $0000
+
+CODE_8091B6:
+create_machine_code_thread:
+    phx
+    php
+    sep #$30
+    ldx #$00
+ -; lda $0650,x
+    beq +
+    inx
+    inx
+    inx
+    inx
+    cpx #$10
+    bne -
+    plp
+    plx
+    sec
+    rtl
+ +; rep #$20
+    lda $065D
+    sta $064D,x
+    lda $065F
+    and #$00FF
+    ora #$0100
+    sta $064F,x
+    stx $0660
+    txa
+    plp
+    plx
+    clc
+    rtl
+
+CODE_8091E9:
+    sep #$30
+    ldx $0645
+    stz $0650,x
+    jmp CODE_80913A
+
+CODE_8091F4:
+    phx
+    php
+    sep #$30
+    tax
+    stz $0650,x
+    plp
+    plx
+    rtl
+
+CODE_8091FF:
+    rep #$30
+    lda $063B
+    sta $0637
+    lda $063D
+    sta $0639
+    jsl CODE_809225
+    jmp CODE_80913A
+
+CODE_809214:
+    rep #$30
+    lda $063B
+    sta $0637
+    lda $063D
+    sta $0639
+    jmp CODE_8091E9
+
+CODE_809225:    //Destroy all Machine Code threads?
+    php
+    sep #$30
+    ldx #$00
+    txa
+ -; sta $0650,x
+    inx
+    inx
+    inx
+    inx
+    cpx #$10
+    bne -
+    plp
+    rtl
+
+CODE_809238:
+pause_machine_code_thread:
+    php
+    rep #$30
+    pha
+    phx
+    phy
+    sep #$30
+    ldx $0645
+    lda $0650,x
+    ora #$40
+    sta $0650,x
+    rep #$30
+    ply
+    plx
+    pla
+    jsl CODE_80913A
+    plp
+    rtl
+
+CODE_809256:
+    php
+    sep #$30
+    ldx $0645
+    lda $0650,x
+    ora #$40
+    sta $0650,x
+    jsl CODE_80913A
+    plp
+    rtl
+
+CODE_80926A:
+    php
+    rep #$30
+    pha
+    phx
+    phy
+    sep #$30
+    lda $021B
+    bpl +
+    jsl CODE_808CDC
+    bra ++
+ +; ldx $0645
+    lda $0650,x
+    ora #$40
+    sta $0650,x
+ +; rep #$30
+    ply
+    plx
+    pla
+    jsl CODE_80913A
+    plp
+    rtl
+
+CODE_809293:
+    php
+    sep #$30
+    ldx #$00
+ -; bit $0650,x
+    bvc +
+    lda $0650,x
+    and #$BF
+    sta $0650,x
+ +; inx
+    inx
+    inx
+    inx
+    cpx #$10
+    bne -
+    plp
+    rtl
+
 //========================================================
 //            NMI VECTOR
 //========================================================
@@ -1323,7 +1792,7 @@ nmi_handler:                                                //($8092B3)
     jmp nmi_force_end
  nmi_continue:
     inc $0643                   //Set NMI Handler Flag
-    jsl upload_oam             //Update OAM
+    jsl upload_oam              //Update OAM
     jsl CODE_808CDC             //Work off DMA Pipeline
     jsl CODE_809C4E             //?
     jsl CODE_83AFC8             //?
@@ -1352,6 +1821,58 @@ nmi_handler:                                                //($8092B3)
     plx
     pla
     rti
+
+CODE_809355:
+    lda $0639
+    bmi +
+    sta $0631
+    ora #$8000
+    sta $0639
+    lda $0637
+    sta $062F
+ +; rts ;++
+
+CODE_80936A:
+    lda $0641
+    bmi +
+    sta $0635
+    ora #$8000
+    sta $0641
+    lda $063F
+    sta $0633
+ +; rts
+
+CODE_80937F:    //Set next NMI Jump to nothing
+    php
+    rep #$30
+    lda.w #(CODE_80938F)
+    sta $0637
+    lda.w #(CODE_80938F >> 16)
+    sta $0639
+    plp
+CODE_80938F:
+    rtl
+
+CODE_809390:    //Does nothing
+    php
+    plp
+    rtl
+
+CODE_809393:    //Does nothing
+    php
+    plp
+    rtl
+
+_irq:                                                       //($809396)
+    jsl irq_vector  //($10597C)
+    rti
+
+_cop:                                                       //($80939B)
+_brk:
+    jml _brk
+
+CODE_80939F:
+    //TODO
 
 //========================================================
 //            HEADER
@@ -1383,12 +1904,12 @@ _header:                                                    //($80FFB0)
     //--Native Mode
     dw $FFFF                            //
     dw $FFFF                            //
-    dw $939B                            //COP
-    dw $939B                            //BRK ($939B)
+    dw _cop                             //COP ($939B)
+    dw _brk                             //BRK ($939B)
     dw $FFFF                            //
     dw _nmi                             //NMI ($92AF)
     dw $FFFF                            //
-    dw $9396                            //IRQ ($9396)
+    dw _irq                             //IRQ ($9396)
     //--Emulation Mode
     dw $FFFF                            //
     dw $FFFF                            //
