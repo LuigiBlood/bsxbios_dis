@@ -7607,7 +7607,7 @@ CODE_83C343:        FA            PLX                       ;
 CODE_83C344:        28            PLP                       ;
 CODE_83C345:        6B            RTL                       ;
 
-CODE_83C346:        08            PHP                       ;
+CODE_83C346:        08            PHP                       ;Door Test
 CODE_83C347:        DA            PHX                       ;
 CODE_83C348:        AD B2 13      LDA $13B2                 ;
 CODE_83C34B:        29 FF 00      AND #$00FF                ;
@@ -7617,7 +7617,6 @@ CODE_83C353:        85 21         STA $21                   ;
 CODE_83C355:        A9 D9 0A      LDA #$0AD9                ;
 CODE_83C358:        85 20         STA $20                   ;
 CODE_83C35A:        80 0A         BRA CODE_83C366           ;
-
 CODE_83C35C:        A9 00 83      LDA #$8300                ;
 CODE_83C35F:        85 21         STA $21                   ;
 CODE_83C361:        A9 17 C5      LDA #$C517                ;
@@ -7626,7 +7625,6 @@ CODE_83C366:        AD 0F 0A      LDA $0A0F                 ;
 CODE_83C369:        D0 06         BNE CODE_83C371           ;
 CODE_83C36B:        A9 FF FF      LDA #$FFFF                ;
 CODE_83C36E:        4C F8 C3      JMP CODE_83C3F8           ;
-
 CODE_83C371:        AE 5F 07      LDX $075F                 ;
 CODE_83C374:        BD 50 16      LDA $1650,x               ;
 CODE_83C377:        8D 07 0A      STA $0A07                 ;
@@ -7659,7 +7657,6 @@ CODE_83C3AD:        E8            INX                       ;
 CODE_83C3AE:        E8            INX                       ;
 CODE_83C3AF:        E8            INX                       ;
 CODE_83C3B0:        80 EC         BRA CODE_83C39E           ;
-
 CODE_83C3B2:        E8            INX                       ;
 CODE_83C3B3:        E8            INX                       ;
 CODE_83C3B4:        BF 7D C5 83   LDA $83C57D,x             ;
@@ -7678,10 +7675,8 @@ CODE_83C3D2:        89 01 00      BIT #$0001                ;
 CODE_83C3D5:        D0 06         BNE CODE_83C3DD           ;
 CODE_83C3D7:        22 61 C4 83   JSL CODE_83C461           ;
 CODE_83C3DB:        80 1B         BRA CODE_83C3F8           ;
-
 CODE_83C3DD:        22 7A C5 83   JSL CODE_83C57A           ;
 CODE_83C3E1:        80 15         BRA CODE_83C3F8           ;
-
 CODE_83C3E3:        22 FB C3 83   JSL CODE_83C3FB           ;
 CODE_83C3E7:        B0 0F         BCS CODE_83C3F8           ;
 CODE_83C3E9:        22 55 C4 83   JSL CODE_83C455           ;

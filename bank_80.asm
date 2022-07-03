@@ -1,29 +1,29 @@
 ; Pointers
 DATA_008000:        9A D6 99			;[Bytecode] EnterTown
-DATA_008003:        42 82 82			;
-DATA_008006:        9E 82 82			;
+DATA_008003:        42 82 82			;[Bytecode] ?
+DATA_008006:        9E 82 82			;[Bytecode] ?
 DATA_008009:        30 82 82			;[Bytecode] DeallocMostBgPalettesAndBgTiles
-DATA_00800C:        EC 84 82			;
-DATA_00800F:        AA 85 82			;
-DATA_008012:        17 86 82			;
-DATA_008015:        77 86 82			;
-DATA_008018:        F3 86 82			;
-DATA_00801B:        4C 85 82			;
-DATA_00801E:        8A 95 82			;
+DATA_00800C:        EC 84 82			;[Bytecode] ?
+DATA_00800F:        AA 85 82			;[Bytecode] ?
+DATA_008012:        17 86 82			;[Bytecode] ?
+DATA_008015:        77 86 82			;[Bytecode] ?
+DATA_008018:        F3 86 82			;[Bytecode] ?
+DATA_00801B:        4C 85 82			;[Bytecode] ?
+DATA_00801E:        8A 95 82			;?
 DATA_008021:        C6 C1 88			;[Bytecode] SetCursorShape0
-DATA_008024:        1D 83 82			;
-DATA_008027:        BF 84 82			;
+DATA_008024:        1D 83 82			;[Bytecode] ?
+DATA_008027:        BF 84 82			;String "Exit the building" (?)
 DATA_00802A:        51 A5 81			;[Bytecode Function] CallSetTextWindowBoundaries(wWindowNumber,bXpos,bYpos,bXsiz,bYsiz)
 DATA_00802D:        C3 A5 81			;[Bytecode Function] CallClearTextWindowDrawBorder(wWindowNumber)
-DATA_008030:        DF 83 82			;
+DATA_008030:        DF 83 82			;[Bytecode] ?
 DATA_008033:        D0 C1 88			;[Bytecode] SetCursorShape1
 DATA_008036:        E0 C1 88			;[Bytecode] SetCursorShape2
 DATA_008039:        EA C1 88			;[Bytecode] SetCursorShape3
 DATA_00803C:        F4 C1 88			;[Bytecode] SetCursorShape4
 DATA_00803F:        FE C1 88			;[Bytecode] SetCursorShape5
-DATA_008042:        03 80 82			;
-DATA_008045:        19 80 82			;
-DATA_008048:        2F 80 82			;
+DATA_008042:        03 80 82			;Pointers?
+DATA_008045:        19 80 82			;Pointers?
+DATA_008048:        2F 80 82			;Pointers?
 DATA_00804B:        45 80 82			;
 DATA_00804E:        5B 80 82			;
 DATA_008051:        71 80 82			;
@@ -66,7 +66,7 @@ DATA_0080BD:        EE B3 90			;
 DATA_0080C0:        DB BD 90			;
 DATA_0080C3:        4A F2 93			;
 DATA_0080C6:        A8 E7 91			;
-DATA_0080C9:        82 DD 91			;
+DATA_0080C9:        82 DD 91			;[GFX Pointers] Dr. Hiroshi GFX/PAL Data
 DATA_0080CC:        DA 9C 92			;
 DATA_0080CF:        8F AC 93			;
 DATA_0080D2:        D4 B4 93			;
@@ -1633,7 +1633,6 @@ CODE_808E31:        9D 17 02      STA $0217,x               ;
 CODE_808E34:        A9 40         LDA #$40                  ;
 CODE_808E36:        9D 19 02      STA $0219,x               ;
 CODE_808E39:        80 23         BRA CODE_808E5E           ;
-
 CODE_808E3B:        BD 11 02      LDA $0211,x               ;
 CODE_808E3E:        1D 13 02      ORA $0213,x               ;
 CODE_808E41:        D0 15         BNE CODE_808E58           ;
@@ -1661,7 +1660,6 @@ CODE_808E6B:        F0 08         BEQ CODE_808E75           ;
 CODE_808E6D:        9E 17 02      STZ $0217,x               ;
 CODE_808E70:        9E 19 02      STZ $0219,x               ;
 CODE_808E73:        80 1E         BRA CODE_808E93           ;
-
 CODE_808E75:        AD 0E 02      LDA $020E                 ;
 CODE_808E78:        1D 97 8E      ORA $8E97,x               ;
 CODE_808E7B:        8D 0E 02      STA $020E                 ;
@@ -1772,7 +1770,6 @@ CODE_808F4D:        C9 3C 00      CMP #$003C                ;
 CODE_808F50:        B0 04         BCS CODE_808F56           ;
 CODE_808F52:        8D 27 06      STA $0627                 ;
 CODE_808F55:        6B            RTL                       ;
-
 CODE_808F56:        9C 27 06      STZ $0627                 ;
 CODE_808F59:        AD 29 06      LDA $0629                 ;
 CODE_808F5C:        1A            INC A                     ;
@@ -1780,7 +1777,6 @@ CODE_808F5D:        C9 3C 00      CMP #$003C                ;
 CODE_808F60:        B0 04         BCS CODE_808F66           ;
 CODE_808F62:        8D 29 06      STA $0629                 ;
 CODE_808F65:        6B            RTL                       ;
-
 CODE_808F66:        9C 29 06      STZ $0629                 ;
 CODE_808F69:        AD 2B 06      LDA $062B                 ;
 CODE_808F6C:        1A            INC A                     ;
@@ -1788,17 +1784,16 @@ CODE_808F6D:        C9 3C 00      CMP #$003C                ;
 CODE_808F70:        B0 04         BCS CODE_808F76           ;
 CODE_808F72:        8D 2B 06      STA $062B                 ;
 CODE_808F75:        6B            RTL                       ;
-
 CODE_808F76:        9C 2B 06      STZ $062B                 ;
 CODE_808F79:        EE 2D 06      INC $062D                 ;
 CODE_808F7C:        6B            RTL                       ;
 
-CODE_808F7D:        78            SEI                       ;
+CODE_808F7D:        78            SEI                       ;reset
 CODE_808F7E:        18            CLC                       ;
 CODE_808F7F:        FB            XCE                       ;
 CODE_808F80:        5C 84 8F 80   JML CODE_808F84           ;
 
-CODE_808F84:        E2 20         SEP #$20                  ;
+CODE_808F84:        E2 20         SEP #$20                  ;init
 CODE_808F86:        C2 10         REP #$10                  ;
 CODE_808F88:        4B            PHK                       ;
 CODE_808F89:        AB            PLB                       ;
@@ -1997,7 +1992,6 @@ CODE_809153:        BB            TYX                       ;
 CODE_809154:        E2 30         SEP #$30                  ;
 CODE_809156:        A9 FF         LDA #$FF                  ;
 CODE_809158:        80 09         BRA CODE_809163           ;
-
 CODE_80915A:        3C 50 06      BIT $0650,x               ;
 CODE_80915D:        70 04         BVS CODE_809163           ;
 CODE_80915F:        30 0E         BMI CODE_80916F           ;
@@ -2010,7 +2004,6 @@ CODE_809167:        E0 10         CPX #$10                  ;
 CODE_809169:        90 EF         BCC CODE_80915A           ;
 CODE_80916B:        A2 00         LDX #$00                  ;
 CODE_80916D:        80 EB         BRA CODE_80915A           ;
-
 CODE_80916F:        8E 45 06      STX $0645                 ;
 CODE_809172:        9B            TXY                       ;
 CODE_809173:        C2 30         REP #$30                  ;
@@ -2023,7 +2016,6 @@ CODE_80917C:        FA            PLX                       ;
 CODE_80917D:        68            PLA                       ;
 CODE_80917E:        28            PLP                       ;
 CODE_80917F:        6B            RTL                       ;
-
 CODE_809180:        8E 45 06      STX $0645                 ;
 CODE_809183:        A9 80 9D      LDA #$9D80                ;
 CODE_809186:        50 06         BVC CODE_80918E           ;
@@ -2063,7 +2055,6 @@ CODE_8091C9:        28            PLP                       ;
 CODE_8091CA:        FA            PLX                       ;
 CODE_8091CB:        38            SEC                       ;
 CODE_8091CC:        6B            RTL                       ;
-
 CODE_8091CD:        C2 20         REP #$20                  ;
 CODE_8091CF:        AD 5D 06      LDA $065D                 ;
 CODE_8091D2:        9D 4D 06      STA $064D,x               ;
@@ -2159,7 +2150,6 @@ CODE_809272:        AD 1B 02      LDA $021B                 ;
 CODE_809275:        10 06         BPL CODE_80927D           ;
 CODE_809277:        22 DC 8C 80   JSL CODE_808CDC           ;
 CODE_80927B:        80 0B         BRA CODE_809288           ;
-
 CODE_80927D:        AE 45 06      LDX $0645                 ;
 CODE_809280:        BD 50 06      LDA $0650,x               ;
 CODE_809283:        09 40         ORA #$40                  ;
@@ -2189,9 +2179,9 @@ CODE_8092AB:        D0 EB         BNE CODE_809298           ;
 CODE_8092AD:        28            PLP                       ;
 CODE_8092AE:        6B            RTL                       ;
 
-CODE_8092AF:        5C B3 92 80   JML CODE_8092B3           ;
+CODE_8092AF:        5C B3 92 80   JML CODE_8092B3           ;_nmi
 
-CODE_8092B3:        C2 30         REP #$30                  ;
+CODE_8092B3:        C2 30         REP #$30                  ;nmi_handler
 CODE_8092B5:        48            PHA                       ;
 CODE_8092B6:        DA            PHX                       ;
 CODE_8092B7:        5A            PHY                       ;
@@ -2255,6 +2245,7 @@ CODE_809351:        7A            PLY                       ;
 CODE_809352:        FA            PLX                       ;
 CODE_809353:        68            PLA                       ;
 CODE_809354:        40            RTI                       ;
+
 CODE_809355:        AD 39 06      LDA $0639                 ;
 CODE_809358:        30 0F         BMI CODE_809369           ;
 CODE_80935A:        8D 31 06      STA $0631                 ;
@@ -8643,7 +8634,6 @@ CODE_80C555:        C9 40         CMP #$40                  ;
 CODE_80C557:        D0 EF         BNE CODE_80C548           ;
 CODE_80C559:        18            CLC                       ;
 CODE_80C55A:        6B            RTL                       ;
-
 CODE_80C55B:        38            SEC                       ;
 CODE_80C55C:        6B            RTL                       ;
 
@@ -8653,7 +8643,6 @@ CODE_80C563:        E4 00         CPX $00                   ;
 CODE_80C565:        F0 02         BEQ CODE_80C569           ;
 CODE_80C567:        38            SEC                       ;
 CODE_80C568:        6B            RTL                       ;
-
 CODE_80C569:        18            CLC                       ;
 CODE_80C56A:        6B            RTL                       ;
 

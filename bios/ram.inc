@@ -79,7 +79,8 @@ constant joy1_input($7E0150)
 constant joy2_input($7E0152)
 constant joy1_pushed($7E0154)
 constant joy2_pushed($7E0156)
-
+constant joy1_unk($7E0158)
+constant joy2_unk($7E015A)
 constant joy1_input_last($7E015C)
 constant joy2_input_last($7E0164)
 
@@ -121,6 +122,8 @@ constant init_jmp_setup($7E063F)        //Init Jump Setup
 
 constant nmi_flag($7E0643)              //Is NMI Handler active? flag
 
+constant filename($7E069B)              //Current Filename
+
 //========================================================
 //            Text Rendering
 //========================================================
@@ -142,6 +145,13 @@ constant seconds_left($7E1433)
 constant ticks_left($7E1437)
 
 constant receiver_found($7E143F)        //Satellaview Found
+
+constant interpreter_check($7E1998)
+constant y_step($7E199A)
+constant x_step($7E199C)
+constant joypad_read_press($7E199E)
+constant joypad_read_input($7E19A0)
+constant joypad_read_unk($7E19A2)
 
 //========================================================
 //            Video

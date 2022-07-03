@@ -2423,7 +2423,7 @@ DATA_88932A:        C3 47
 DATA_88932C:        C3 B8     
 DATA_88932E:        C2        
 
-CODE_889330:        AD 81 07      LDA $0781                 ;
+CODE_88932F:        AD 81 07      LDA $0781                 ;[Bytecode Function] CallTestIfFolderExists
 CODE_889332:        0D 80 07      ORA $0780                 ;
 CODE_889335:        F0 31         BEQ CODE_889368           ;
 CODE_889337:        AD 81 07      LDA $0781                 ;
@@ -6304,7 +6304,7 @@ DATA_88B26B:        DC 82 B9
 DATA_88B26E:        82 F1 81      
 DATA_88B271:        42 00         
 
-CODE_88B273:        AD 81 07      LDA $0781                 ;
+CODE_88B273:        AD 81 07      LDA $0781                 ;[Bytecode Function] CallTestIfFileAvailable
 CODE_88B276:        8D 4F 00      STA $004F                 ;
 CODE_88B279:        AD 85 07      LDA $0785                 ;
 CODE_88B27C:        8D 4E 00      STA $004E                 ;
@@ -6312,12 +6312,11 @@ CODE_88B27F:        22 34 5B 10   JSL CODE_105B34           ;
 CODE_88B283:        B0 04         BCS CODE_88B289           ;
 CODE_88B285:        9C 98 19      STZ $1998                 ;
 CODE_88B288:        6B            RTL                       ;
-
 CODE_88B289:        A9 01 00      LDA #$0001                ;
 CODE_88B28C:        8D 98 19      STA $1998                 ;
 CODE_88B28F:        6B            RTL                       ;
 
-CODE_88B290:        AD 81 07      LDA $0781                 ;
+CODE_88B290:        AD 81 07      LDA $0781                 ;[Bytecode Function] CallDownloadFile
 CODE_88B293:        8D 4F 00      STA $004F                 ;
 CODE_88B296:        BD F2 1A      LDA $1AF2,x               ;
 CODE_88B299:        8D 4E 00      STA $004E                 ;
@@ -10119,7 +10118,7 @@ CODE_88D070:        85 AC         STA $AC                   ;
 CODE_88D072:        9C B6 0C      STZ $0CB6                 ;
 CODE_88D075:        60            RTS                       ;
 
-CODE_88D076:        22 46 C3 83   JSL CODE_83C346           ;
+CODE_88D076:        22 46 C3 83   JSL CODE_83C346           ;[Bytecode Function] CallTestIfDoor
 CODE_88D07A:        8D 98 19      STA $1998                 ;
 CODE_88D07D:        6B            RTL                       ;
 

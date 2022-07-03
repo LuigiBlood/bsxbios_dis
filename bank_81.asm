@@ -800,11 +800,10 @@ CODE_818613:        A9 80 00      LDA #$0080                ;
 CODE_818616:        8D 30 0C      STA $0C30                 ;
 CODE_818619:        6B            RTL                       ;
 
-CODE_81861A:        AD B6 0C      LDA $0CB6                 ;
+CODE_81861A:        AD B6 0C      LDA $0CB6                 ;[Bytecode Handler] DrawMessageBoxAllAtOnce
 CODE_81861D:        F0 03         BEQ CODE_818622           ;
 CODE_81861F:        3A            DEC A                     ;
 CODE_818620:        80 47         BRA CODE_818669           ;
-
 CODE_818622:        DA            PHX                       ;
 CODE_818623:        A0 01 00      LDY #$0001                ;
 CODE_818626:        20 5F BB      JSR CODE_81BB5F           ;
@@ -836,16 +835,13 @@ CODE_81865E:        8E 46 07      STX $0746                 ;
 CODE_818661:        AD A4 19      LDA $19A4                 ;
 CODE_818664:        8D 48 07      STA $0748                 ;
 CODE_818667:        80 11         BRA CODE_81867A           ;
-
 CODE_818669:        AD 9E 0B      LDA $0B9E                 ;
 CODE_81866C:        F0 06         BEQ CODE_818674           ;
 CODE_81866E:        22 57 AA 80   JSL CODE_80AA57           ;
 CODE_818672:        80 07         BRA CODE_81867B           ;
-
 CODE_818674:        22 53 AA 80   JSL CODE_80AA53           ;
 CODE_818678:        F0 01         BEQ CODE_81867B           ;
 CODE_81867A:        60            RTS                       ;
-
 CODE_81867B:        9C B6 0C      STZ $0CB6                 ;
 CODE_81867E:        A5 AC         LDA $AC                   ;
 CODE_818680:        18            CLC                       ;
@@ -1841,7 +1837,7 @@ CODE_818EFF:        A9 EE 8E      LDA #$8EEE                ;
 CODE_818F02:        8D BC 0B      STA $0BBC                 ;
 CODE_818F05:        6B            RTL                       ;
 
-CODE_818F06:        AD B6 0C      LDA $0CB6                 ;
+CODE_818F06:        AD B6 0C      LDA $0CB6                 ;[Bytecode Function] CallDrawMessageBoxCharByChar
 CODE_818F09:        0A            ASL A                     ;
 CODE_818F0A:        DA            PHX                       ;
 CODE_818F0B:        AA            TAX                       ;
@@ -1850,9 +1846,10 @@ CODE_818F10:        FA            PLX                       ;
 CODE_818F11:        48            PHA                       ;
 CODE_818F12:        60            RTS                       ;
 
-DATA_818F13:        1A          
-DATA_818F14:        8F 61 8F 9A 
-DATA_818F18:        8F C8 8F    
+DATA_818F13:        1A 8F                                   ;
+DATA_818F15:        61 8F                                   ;
+DATA_818F17:        9A 8F                                   ;
+DATA_818F19:        C8 8F                                   ;
 
 CODE_818F1B:        DA            PHX                       ;
 CODE_818F1C:        A0 00 00      LDY #$0000                ;
@@ -4810,7 +4807,7 @@ CODE_81A68D:        22 65 B9 80   JSL CODE_80B965           ;
 CODE_81A691:        FA            PLX                       ;
 CODE_81A692:        6B            RTL                       ;
 
-CODE_81A693:        A0 00 00      LDY #$0000                ;
+CODE_81A693:        A0 00 00      LDY #$0000                ;[Bytecode Function] CallPeekMemory16bit
 CODE_81A696:        20 EA BD      JSR CODE_81BDEA           ;
 CODE_81A699:        85 00         STA $00                   ;
 CODE_81A69B:        E6 AC         INC $AC                   ;
@@ -4827,7 +4824,7 @@ CODE_81A6AF:        A7 20         LDA [$20]                 ;
 CODE_81A6B1:        92 00         STA ($00)                 ;
 CODE_81A6B3:        6B            RTL                       ;
 
-CODE_81A6B4:        A0 00 00      LDY #$0000                ;
+CODE_81A6B4:        A0 00 00      LDY #$0000                ;[Bytecode Function] CallPokeMemory16bit
 CODE_81A6B7:        20 EA BD      JSR CODE_81BDEA           ;
 CODE_81A6BA:        85 00         STA $00                   ;
 CODE_81A6BC:        E6 AC         INC $AC                   ;
@@ -6048,7 +6045,7 @@ CODE_81B0E7:        69 08 00      ADC #$0008                ;
 CODE_81B0EA:        85 AC         STA $AC                   ;
 CODE_81B0EC:        60            RTS                       ;
 
-CODE_81B0ED:        08            PHP                       ;
+CODE_81B0ED:        08            PHP                       ;[Bytecode Function] ReadJoypad (0x33)
 CODE_81B0EE:        A0 01 00      LDY #$0001                ;
 CODE_81B0F1:        B7 AC         LDA [$AC],y               ;
 CODE_81B0F3:        29 FF 00      AND #$00FF                ;
@@ -6117,7 +6114,7 @@ CODE_81B18C:        85 AC         STA $AC                   ;
 CODE_81B18E:        28            PLP                       ;
 CODE_81B18F:        60            RTS                       ;
 
-CODE_81B190:        A0 01 00      LDY #$0001                ;
+CODE_81B190:        A0 01 00      LDY #$0001                ;[Bytecode Function] MathsLet (0x26)
 CODE_81B193:        20 EA BD      JSR CODE_81BDEA           ;
 CODE_81B196:        85 00         STA $00                   ;
 CODE_81B198:        20 5F BB      JSR CODE_81BB5F           ;
@@ -7322,7 +7319,7 @@ CODE_81BB59:        85 21         STA $21                   ;
 CODE_81BB5B:        7A            PLY                       ;
 CODE_81BB5C:        82 38 FF      BRL CODE_81BA97           ;
 
-CODE_81BB5F:        5A            PHY                       ;
+CODE_81BB5F:        5A            PHY                       ;Get Variable
 CODE_81BB60:        C8            INY                       ;
 CODE_81BB61:        C8            INY                       ;
 CODE_81BB62:        B7 AC         LDA [$AC],y               ;
@@ -7509,14 +7506,14 @@ DATA_81BD6C:        70 BD
 
 CODE_81BD6E:        80 FE         BRA CODE_81BD6E           ;
 
-CODE_81BD70:        FA            PLX                       ;
+CODE_81BD70:        FA            PLX                       ;immediate (00)
 CODE_81BD71:        B7 AC         LDA [$AC],y               ;
 CODE_81BD73:        C8            INY                       ;
 CODE_81BD74:        C8            INY                       ;
 CODE_81BD75:        C8            INY                       ;
 CODE_81BD76:        60            RTS                       ;
 
-CODE_81BD77:        FA            PLX                       ;
+CODE_81BD77:        FA            PLX                       ;private (01)
 CODE_81BD78:        8A            TXA                       ;
 CODE_81BD79:        18            CLC                       ;
 CODE_81BD7A:        77 AC         ADC [$AC],y               ;
@@ -7529,7 +7526,7 @@ CODE_81BD83:        C8            INY                       ;
 CODE_81BD84:        C8            INY                       ;
 CODE_81BD85:        60            RTS                       ;
 
-CODE_81BD86:        FA            PLX                       ;
+CODE_81BD86:        FA            PLX                       ;global (02)
 CODE_81BD87:        B7 AC         LDA [$AC],y               ;
 CODE_81BD89:        5A            PHY                       ;
 CODE_81BD8A:        A8            TAY                       ;
@@ -7540,7 +7537,7 @@ CODE_81BD90:        C8            INY                       ;
 CODE_81BD91:        C8            INY                       ;
 CODE_81BD92:        60            RTS                       ;
 
-CODE_81BD93:        FA            PLX                       ;
+CODE_81BD93:        FA            PLX                       ;special (09, 0A)
 CODE_81BD94:        5A            PHY                       ;
 CODE_81BD95:        B7 AC         LDA [$AC],y               ;
 CODE_81BD97:        18            CLC                       ;
@@ -7602,9 +7599,9 @@ CODE_81BDE7:        C8            INY                       ;
 CODE_81BDE8:        C8            INY                       ;
 CODE_81BDE9:        60            RTS                       ;
 
-CODE_81BDEA:        5A            PHY                       ;
-CODE_81BDEB:        C8            INY                       ;
-CODE_81BDEC:        C8            INY                       ;
+CODE_81BDEA:        5A            PHY                       ;Get Variable Address
+CODE_81BDEB:        C8            INY                       ;Carry = if set, is global
+CODE_81BDEC:        C8            INY                       ;        if unset, is private/special
 CODE_81BDED:        B7 AC         LDA [$AC],y               ;
 CODE_81BDEF:        29 FF 00      AND #$00FF                ;
 CODE_81BDF2:        0A            ASL A                     ;
@@ -7613,15 +7610,19 @@ CODE_81BDF4:        DA            PHX                       ;
 CODE_81BDF5:        AA            TAX                       ;
 CODE_81BDF6:        7C F9 BD      JMP ($BDF9,x)             ;
 
-DATA_81BDF9:        FB            
-DATA_81BDFA:        BF FD BF 06   
-DATA_81BDFE:        C0 0D C0      
-DATA_81BE01:        F9 BF F9      
-DATA_81BE04:        BF F9 BF F9   
-DATA_81BE08:        BF F9 BF 0D   
-DATA_81BE0C:        C0 F9 BF      
-DATA_81BE0F:        F9 BF F9      
-DATA_81BE12:        BF F9 BF F9   
+DATA_81BDF9:        FB BF         
+DATA_81BDFB:        FD BF 
+DATA_81BDFD:        06 C0
+DATA_81BDFF:        0D C0      
+DATA_81BE01:        F9 BF      
+DATA_81BE03:        F9 BF
+DATA_81BE05:        F9 BF   
+DATA_81BE07:        F9 BF
+DATA_81BE09:        F9 BF
+DATA_81BE0B:        0D C0  
+DATA_81BE0D:        F9 BF      
+DATA_81BE0F:        F9 BF      
+DATA_81BE11:        F9 BF F9 BF F9   
 DATA_81BE16:        BF F9 BF F9   
 DATA_81BE1A:        BF F9 BF F9   
 DATA_81BE1E:        BF F9 BF F9   
@@ -7748,7 +7749,7 @@ CODE_81BFF9:        80 FE         BRA CODE_81BFF9           ;
 
 CODE_81BFFB:        80 FE         BRA CODE_81BFFB           ;
 
-CODE_81BFFD:        FA            PLX                       ;
+CODE_81BFFD:        FA            PLX                       ;positive private var (01)
 CODE_81BFFE:        8A            TXA                       ;
 CODE_81BFFF:        18            CLC                       ;
 CODE_81C000:        77 AC         ADC [$AC],y               ;
@@ -7757,14 +7758,14 @@ CODE_81C003:        C8            INY                       ;
 CODE_81C004:        C8            INY                       ;
 CODE_81C005:        60            RTS                       ;
 
-CODE_81C006:        FA            PLX                       ;
+CODE_81C006:        FA            PLX                       ;positive global var (02)
 CODE_81C007:        B7 AC         LDA [$AC],y               ;
 CODE_81C009:        C8            INY                       ;
 CODE_81C00A:        C8            INY                       ;
 CODE_81C00B:        C8            INY                       ;
 CODE_81C00C:        60            RTS                       ;
 
-CODE_81C00D:        FA            PLX                       ;
+CODE_81C00D:        FA            PLX                       ;special var (03 & 09)
 CODE_81C00E:        B7 AC         LDA [$AC],y               ;
 CODE_81C010:        18            CLC                       ;
 CODE_81C011:        6D A4 19      ADC $19A4                 ;
@@ -7773,7 +7774,7 @@ CODE_81C015:        C8            INY                       ;
 CODE_81C016:        C8            INY                       ;
 CODE_81C017:        60            RTS                       ;
 
-CODE_81C018:        B7 AC         LDA [$AC],y               ;
+CODE_81C018:        B7 AC         LDA [$AC],y               ;negative global var (FE)
 CODE_81C01A:        49 FF FF      EOR #$FFFF                ;
 CODE_81C01D:        1A            INC A                     ;
 CODE_81C01E:        18            CLC                       ;
@@ -7784,7 +7785,7 @@ CODE_81C023:        C8            INY                       ;
 CODE_81C024:        C8            INY                       ;
 CODE_81C025:        60            RTS                       ;
 
-CODE_81C026:        FA            PLX                       ;
+CODE_81C026:        FA            PLX                       ;negative private var (FD)
 CODE_81C027:        B7 AC         LDA [$AC],y               ;
 CODE_81C029:        49 FF FF      EOR #$FFFF                ;
 CODE_81C02C:        1A            INC A                     ;
@@ -7793,7 +7794,7 @@ CODE_81C02E:        C8            INY                       ;
 CODE_81C02F:        C8            INY                       ;
 CODE_81C030:        60            RTS                       ;
 
-CODE_81C031:        FA            PLX                       ;
+CODE_81C031:        FA            PLX                       ;negative special var (unused?)
 CODE_81C032:        B7 AC         LDA [$AC],y               ;
 CODE_81C034:        49 FF FF      EOR #$FFFF                ;
 CODE_81C037:        1A            INC A                     ;
